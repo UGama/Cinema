@@ -1,5 +1,6 @@
 package com.example.cinema;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
@@ -13,8 +14,9 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    private static final int UPDATE_VIEWPAGER = 0;
     private ViewPager viewPager;
     private posterPagerAdapter pagerAdapter;
     private List<Poster> posterList;
@@ -23,8 +25,9 @@ public class MainActivity extends AppCompatActivity {
     private Button find;
     private Button recommend;
     private Button mine;
-
     private TextView recommendText;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         posterList = new ArrayList<>();
+        posterList.add(new Poster(R.drawable.adtest));
+        posterList.add(new Poster(R.drawable.adtest));
+        posterList.add(new Poster(R.drawable.adtest));
         posterList.add(new Poster(R.drawable.adtest));
         posterList.add(new Poster(R.drawable.adtest));
         posterList.add(new Poster(R.drawable.adtest));
@@ -49,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 indicator.setSelected(position);
-                position = position % 4;
-                /*switch (position) {
+                /*position = position % 4;
+                switch (position) {
                     case 0:
                         Item.setImageResource(v1.SourceId1);
                         Bag_Pic.setImageResource(v1.SourceId2);
@@ -85,13 +91,29 @@ public class MainActivity extends AppCompatActivity {
         });
 
         find = findViewById(R.id.find);
+        find.setOnClickListener(this);
         recommend = findViewById(R.id.recommend);
         mine = findViewById(R.id.mine);
+        mine.setOnClickListener(this);
 
         recommend.setBackgroundResource(R.drawable.recommend2);
         recommendText = findViewById(R.id.recommendText);
         recommendText.setTextColor(this.getResources().getColor(R.color.colorBase));
     }
+
+    @Override
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.find:
+                break;
+            case R.id.mine:
+                Intent intent2 = new Intent(MainActivity.this, Mine.class);
+                startActivity(intent2);
+                overridePendingTransition(0, 0);
+                break;
+        }
+    }
+
     private class posterPagerAdapter extends android.support.v4.view.PagerAdapter {
 
         List<Poster> posterList = new ArrayList<>();

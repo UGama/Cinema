@@ -26,6 +26,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".Mine" />
+
 
 
         <!-- 实时通信模块、推送（均需要加入以下声明） START -->
