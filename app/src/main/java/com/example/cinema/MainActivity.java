@@ -105,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.find:
+                Intent intent1 = new Intent(MainActivity.this, Find.class);
+                startActivity(intent1);
+                overridePendingTransition(0, 0);
                 break;
             case R.id.mine:
                 Intent intent2 = new Intent(MainActivity.this, Mine.class);

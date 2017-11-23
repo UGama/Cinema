@@ -12,8 +12,8 @@
         android:orientation="vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintGuide_percent="0.5"
-        />
+        app:layout_constraintGuide_percent="0.5" />
+
     <android.support.constraint.Guideline
         android:id="@+id/topGuideLine"
         android:layout_width="wrap_content"
@@ -21,8 +21,7 @@
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.1"
-        />
+        app:layout_constraintGuide_percent="0.1" />
     <TextView
         android:text="发现"
         android:textSize="24sp"
@@ -32,8 +31,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toBottomOf="@id/topGuideLine"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
     <Button
         android:id="@+id/search"
         android:background="@drawable/search"
@@ -43,9 +41,201 @@
         app:layout_constraintBottom_toBottomOf="@id/topGuideLine"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintHorizontal_bias="0.95" />
+    <ImageView
+        android:id="@+id/support1"
+        android:background="#f6f6f6"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topGuideLine" />
+    <android.support.constraint.Guideline
+        android:id="@+id/topGuideLine2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintGuide_percent="0.25"
         />
-    
+    <android.support.constraint.Guideline
+        android:id="@+id/guideLine20"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_percent="0.2"
+        />
+    <android.support.constraint.Guideline
+        android:id="@+id/guideLine40"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_percent="0.4"
+        />
+    <android.support.constraint.Guideline
+        android:id="@+id/guideLine60"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_percent="0.6"
+        />
+    <android.support.constraint.Guideline
+        android:id="@+id/guideLine80"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintGuide_percent="0.8"
+        />
+
+    <Button
+        android:text="院线"
+        android:textColor="@color/colorBase"
+        android:textSize="16sp"
+        android:background="@drawable/catalog"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideLine20"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintVertical_bias="0.1"
+        />
+    <Button
+        android:text="欧美"
+        android:textColor="@color/colorBase"
+        android:textSize="16sp"
+        android:background="@drawable/catalog"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine20"
+        app:layout_constraintEnd_toEndOf="@id/guideLine40"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintVertical_bias="0.1"
+        />
+    <Button
+        android:text="日韩"
+        android:textColor="@color/colorBase"
+        android:textSize="16sp"
+        android:background="@drawable/catalog"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine40"
+        app:layout_constraintEnd_toEndOf="@id/guideLine60"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintVertical_bias="0.1"
+        />
+    <Button
+        android:text="华语"
+        android:textColor="@color/colorBase"
+        android:textSize="16sp"
+        android:background="@drawable/catalog"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine60"
+        app:layout_constraintEnd_toEndOf="@id/guideLine80"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintVertical_bias="0.1"
+        />
+    <Button
+        android:text="剧情"
+        android:textColor="@color/colorBase"
+        android:textSize="16sp"
+        android:background="@drawable/catalog"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine80"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintVertical_bias="0.1"
+        />
+    <Button
+        android:text="喜剧"
+        android:textColor="@color/colorBase"
+        android:textSize="16sp"
+        android:background="@drawable/catalog"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/guideLine20"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintVertical_bias="0.9"
+        />
+    <Button
+        android:text="动作"
+        android:textColor="@color/colorBase"
+        android:textSize="16sp"
+        android:background="@drawable/catalog"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine20"
+        app:layout_constraintEnd_toEndOf="@id/guideLine40"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintVertical_bias="0.9"
+        />
+    <Button
+        android:text="奇幻"
+        android:textColor="@color/colorBase"
+        android:textSize="16sp"
+        android:background="@drawable/catalog"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine40"
+        app:layout_constraintEnd_toEndOf="@id/guideLine60"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintVertical_bias="0.9"
+        />
+    <Button
+        android:text="犯罪"
+        android:textColor="@color/colorBase"
+        android:textSize="16sp"
+        android:background="@drawable/catalog"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine60"
+        app:layout_constraintEnd_toEndOf="@id/guideLine80"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintVertical_bias="0.9"
+        />
+    <Button
+        android:text="更多"
+        android:textColor="@color/colorBase"
+        android:textSize="16sp"
+        android:background="@drawable/catalog"
+        android:layout_width="60dp"
+        android:layout_height="30dp"
+        app:layout_constraintStart_toStartOf="@id/guideLine80"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/support1"
+        app:layout_constraintBottom_toTopOf="@id/support2"
+        app:layout_constraintVertical_bias="0.9"
+        />
+    <ImageView
+        android:id="@+id/support2"
+        android:background="#f6f6f6"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topGuideLine2" />
+
+
 
     <ImageView
         android:id="@+id/bottomLine"
@@ -54,8 +244,7 @@
         android:background="#000000"
         app:layout_constraintBottom_toBottomOf="parent"
         android:layout_marginBottom="60dp"
-        android:src="#f6f6f6"
-        />
+        android:src="#f6f6f6" />
     <Button
         android:id="@+id/find"
         android:layout_width="34dp"
@@ -66,7 +255,8 @@
         app:layout_constraintTop_toBottomOf="@id/bottomLine"
         app:layout_constraintEnd_toStartOf="@id/midGuideLine"
         app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintHorizontal_bias="0.3"/>
+        app:layout_constraintHorizontal_bias="0.3" />
+
     <Button
         android:id="@+id/recommend"
         android:layout_width="34dp"
@@ -76,8 +266,8 @@
         app:layout_constraintTop_toBottomOf="@id/bottomLine"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.1"
-        />
+        app:layout_constraintVertical_bias="0.1" />
+
     <Button
         android:id="@+id/mine"
         android:background="@drawable/mine1"
@@ -88,8 +278,7 @@
         app:layout_constraintHorizontal_bias="0.7"
         app:layout_constraintTop_toBottomOf="@+id/bottomLine"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.1"
-        />
+        app:layout_constraintVertical_bias="0.1" />
     <TextView
         android:id="@+id/findText"
         android:text="发现"
@@ -101,8 +290,8 @@
         app:layout_constraintEnd_toEndOf="@id/midGuideLine"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/find"
-        app:layout_constraintHorizontal_bias="0.3"
-        />
+        app:layout_constraintHorizontal_bias="0.3" />
+
     <TextView
         android:id="@+id/recommendText"
         android:text="本周上映"
@@ -113,8 +302,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/recommend"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintEnd_toEndOf="parent" />
+
     <TextView
         android:id="@+id/mineText"
         android:text="我的"
@@ -126,7 +315,6 @@
         app:layout_constraintTop_toBottomOf="@+id/mine"
         app:layout_constraintStart_toStartOf="@id/midGuideLine"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.7"
-        />
+        app:layout_constraintHorizontal_bias="0.7" />
 
 </android.support.constraint.ConstraintLayout>
