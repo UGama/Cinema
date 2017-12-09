@@ -16,9 +16,8 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private static final int UPDATE_VIEWPAGER = 0;
     private ViewPager viewPager;
-    private posterPagerAdapter pagerAdapter;
+    private PosterPagerAdapter posterPagerAdapter;
     private List<Poster> posterList;
     private ViewPagerIndicator indicator;
 
@@ -26,8 +25,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button recommend;
     private Button mine;
     private TextView recommendText;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +39,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         posterList.add(new Poster(R.drawable.adtest));
         posterList.add(new Poster(R.drawable.adtest));
         viewPager = findViewById(R.id.viewPager);
-        pagerAdapter = new posterPagerAdapter(posterList);
-        viewPager.setAdapter(pagerAdapter);
+        posterPagerAdapter = new PosterPagerAdapter(posterList);
+        viewPager.setAdapter(posterPagerAdapter);
         indicator = findViewById(R.id.indicator);
         indicator.setLength(posterList.size());
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -117,11 +114,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private class posterPagerAdapter extends android.support.v4.view.PagerAdapter {
+    private class PosterPagerAdapter extends android.support.v4.view.PagerAdapter {
 
         List<Poster> posterList = new ArrayList<>();
 
-        public posterPagerAdapter(List<Poster> posterList) {
+        public PosterPagerAdapter(List<Poster> posterList) {
             this.posterList = posterList;
         }
 

@@ -18,7 +18,7 @@
         android:name=".MyLeanCloudApp"
         >
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".Place">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

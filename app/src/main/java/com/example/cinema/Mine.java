@@ -44,6 +44,9 @@ public class Mine extends AppCompatActivity implements View.OnClickListener {
                 overridePendingTransition(0, 0);
                 break;
             case R.id.find:
+                Intent intent2 = new Intent(Mine.this, Find.class);
+                startActivity(intent2);
+                overridePendingTransition(0, 0);
                 break;
         }
     }

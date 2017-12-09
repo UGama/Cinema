@@ -1,7 +1,7 @@
 package com.example.cinema;
 
 /**
- * Created by Gama on 11/17/17.
+ * Created by Gama on 11/30/17.
  */
 
 public class Poster {
@@ -12,5 +12,9 @@ public class Poster {
 
     public int getSourceId() {
         return SourceId;
+    }
+
+    public void setSourceId(int sourceId) {
+        SourceId = sourceId;
     }
 }
