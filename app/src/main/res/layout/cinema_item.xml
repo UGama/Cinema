@@ -1,20 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="126dp"
+    android:layout_height="150dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff">
+    <ImageView
+        android:id="@+id/pic_shape"
+        android:layout_width="52dp"
+        android:layout_height="52dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/scheduleRecyclerView"
+        android:background="@drawable/pic_shape"
+        android:layout_marginStart="16dp"
+        />
     <ImageView
         android:id="@+id/cinemaPic"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.05"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/scheduleRecyclerView"
-        app:layout_constraintVertical_bias="0.2"
-        android:background="@drawable/cinema_example"
+        app:layout_constraintStart_toStartOf="@id/pic_shape"
+        app:layout_constraintEnd_toEndOf="@id/pic_shape"
+        app:layout_constraintTop_toTopOf="@id/pic_shape"
+        app:layout_constraintBottom_toBottomOf="@id/pic_shape"
+        android:src="@drawable/cinema_example"
         />
     <TextView
         android:id="@+id/cinemaName"
@@ -22,9 +30,12 @@
         android:layout_height="wrap_content"
         android:text="@string/test"
         android:textColor="#000000"
-        android:textSize="15sp"
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@id/cinemaPic"
         app:layout_constraintTop_toTopOf="@id/cinemaPic"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toBottomOf="@+id/cinemaPic"
+        app:layout_constraintVertical_bias="0.3"
         />
     <TextView
         android:id="@+id/position"
@@ -55,10 +66,11 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/scheduleRecyclerView"
         android:layout_width="0dp"
-        android:layout_height="63dp"
+        android:layout_height="80dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="10dp"
         />
     <ImageView
         android:background="@color/colorLineGray"
@@ -67,5 +79,6 @@
         app:layout_constraintStart_toStartOf="@id/cinemaName"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginStart="16dp"
         />
 </android.support.constraint.ConstraintLayout>

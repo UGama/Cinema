@@ -32,6 +32,8 @@ public class Place extends AppCompatActivity {
     private RecyclerView cinemaRecyclerView;
     private List<Cinema> cinemaList;
 
+    private List<Schedule> scheduleList;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -61,8 +63,13 @@ public class Place extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
         cinemaRecyclerView.setLayoutManager(linearLayoutManager1);
         cinemaList = new ArrayList<>();
-        Cinema cinema = new Cinema("大地影院下沙银泰STAR MAX店", "江干区杭州经济技术开发区海达南路397号银泰城8F", "NULL", "6.1km");
-        cinemaList.add(cinema);cinemaList.add(cinema);cinemaList.add(cinema);cinemaList.add(cinema);cinemaList.add(cinema);cinemaList.add(cinema);
+        Cinema cinema = new Cinema("杭州蓝钻时光影城", "江干区下沙听涛路157号源隆商业大厦2幢五楼", "NULL", "1.2km");
+        cinemaList.add(cinema);
+        cinemaList.add(cinema);
+        cinemaList.add(cinema);
+        cinemaList.add(cinema);
+        cinemaList.add(cinema);
+        cinemaList.add(cinema);
         CinemaAdapter cinemaAdapter = new CinemaAdapter(cinemaList);
         cinemaRecyclerView.setAdapter(cinemaAdapter);
     }
@@ -152,6 +159,19 @@ public class Place extends AppCompatActivity {
             holder.cinemaName.setText(cinema.getName());
             holder.distance.setText(cinema.getDistance());
             holder.position.setText(cinema.getPosition());
+            LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getBaseContext());
+            linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+            holder.scheduleRecyclerView.setLayoutManager(linearLayoutManager2);
+            scheduleList = new ArrayList<>();
+            scheduleList.add(new Schedule("09:30", "28元", "英语 3D"));
+            scheduleList.add(new Schedule("10:35", "28元", "英语 3D"));
+            scheduleList.add(new Schedule("11:25", "28元", "英语 3D"));
+            scheduleList.add(new Schedule("11:25", "28元", "英语 3D"));
+            scheduleList.add(new Schedule("11:25", "28元", "英语 3D"));
+            scheduleList.add(new Schedule("11:25", "28元", "英语 3D"));
+            scheduleList.add(new Schedule("11:25", "28元", "英语 3D"));
+            ScheduleAdapter scheduleAdapter = new ScheduleAdapter(scheduleList);
+            holder.scheduleRecyclerView.setAdapter(scheduleAdapter);
         }
 
         @Override
@@ -163,12 +183,54 @@ public class Place extends AppCompatActivity {
             private TextView cinemaName;
             private TextView distance;
             private TextView position;
-
+            private RecyclerView scheduleRecyclerView;
             private ViewHolder(View view) {
                 super(view);
                 cinemaName = view.findViewById(R.id.cinemaName);
                 distance = view.findViewById(R.id.distance);
                 position = view.findViewById(R.id.position);
+                scheduleRecyclerView = view.findViewById(R.id.scheduleRecyclerView);
+            }
+        }
+    }
+
+    public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
+
+        public List<Schedule> scheduleList;
+
+        public ScheduleAdapter(List<Schedule> scheduleList) {
+            this.scheduleList = scheduleList;
+        }
+        @Override
+        public ScheduleAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.schedule_item, parent, false);
+            final ViewHolder holder = new ViewHolder(view);
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(ScheduleAdapter.ViewHolder holder, int position) {
+            Schedule schedule = scheduleList.get(position);
+            holder.time.setText(schedule.getTime());
+            holder.price.setText(schedule.getPrice());
+            holder.type.setText(schedule.getType());
+        }
+
+        @Override
+        public int getItemCount() {
+            return scheduleList.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView time;
+            private TextView price;
+            private TextView type;
+            private ViewHolder(View view) {
+                super(view);
+                time = view.findViewById(R.id.time);
+                price = view.findViewById(R.id.price);
+                type = view.findViewById(R.id.type);
             }
         }
     }

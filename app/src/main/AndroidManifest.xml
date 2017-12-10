@@ -29,6 +29,7 @@
         <activity android:name=".Mine" />
         <activity android:name=".Find" />
         <activity android:name=".Place" />
+        <activity android:name=".Screenings" />
 
 
 
