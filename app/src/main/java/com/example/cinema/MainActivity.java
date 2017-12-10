@@ -21,6 +21,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<Poster> posterList;
     private ViewPagerIndicator indicator;
 
+    private ImageView film1;
+    private ImageView film2;
+    private ImageView film3;
+    private TextView filmText1;
+    private TextView filmText2;
+    private TextView filmText3;
+
     private Button find;
     private Button recommend;
     private Button mine;
@@ -87,6 +94,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        film1 = findViewById(R.id.film1);
+        film1.setOnClickListener(this);
+        film2 = findViewById(R.id.film2);
+        film2.setOnClickListener(this);
+        film3 = findViewById(R.id.film3);
+        film3.setOnClickListener(this);
+        filmText1 = findViewById(R.id.film1Text);
+        filmText2 = findViewById(R.id.film2Text);
+        filmText3 = findViewById(R.id.film3Text);
+
         find = findViewById(R.id.find);
         find.setOnClickListener(this);
         recommend = findViewById(R.id.recommend);
@@ -110,6 +127,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent2 = new Intent(MainActivity.this, Mine.class);
                 startActivity(intent2);
                 overridePendingTransition(0, 0);
+                break;
+            case R.id.film1:
+                Intent intent3 = new Intent(MainActivity.this, Place.class);
+                intent3.putExtra("filmName", filmText1.getText().toString());
+                startActivity(intent3);
+                break;
+            case R.id.film2:
+                Intent intent4 = new Intent(MainActivity.this, Place.class);
+                intent4.putExtra("filmName", filmText2.getText().toString());
+                startActivity(intent4);
+                break;
+            case R.id.film3:
+                Intent intent5 = new Intent(MainActivity.this, Place.class);
+                intent5.putExtra("filmName", filmText3.getText().toString());
+                startActivity(intent5);
                 break;
         }
     }
