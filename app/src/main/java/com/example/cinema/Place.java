@@ -150,6 +150,24 @@ public class Place extends AppCompatActivity {
             View view = LayoutInflater.from(parent.getContext())
                     .inflate(R.layout.cinema_item, parent, false);
             final ViewHolder holder = new ViewHolder(view);
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    TextView tempCinemaName = view.findViewById(R.id.cinemaName);
+                    String cinemaName = tempCinemaName.getText().toString();
+                    TextView tempCinemaPosition = view.findViewById(R.id.position);
+                    String cinemaPosition = tempCinemaPosition.getText().toString();
+                    TextView tempDistance = view.findViewById(R.id.distance);
+                    String distance = tempDistance.getText().toString();
+                    Intent intent = new Intent(Place.this, Screenings.class);
+                    intent.putExtra("CinemaName", cinemaName);
+                    intent.putExtra("CinemaPosition", cinemaPosition);
+                    intent.putExtra("Distance", distance);
+                    intent.putExtra("FilmName", filmNameString);
+                    startActivity(intent);
+                    overridePendingTransition(0, 0);
+                }
+            });
             return holder;
         }
 
@@ -184,12 +202,14 @@ public class Place extends AppCompatActivity {
             private TextView distance;
             private TextView position;
             private RecyclerView scheduleRecyclerView;
+            private View itemView;
             private ViewHolder(View view) {
                 super(view);
                 cinemaName = view.findViewById(R.id.cinemaName);
                 distance = view.findViewById(R.id.distance);
                 position = view.findViewById(R.id.position);
                 scheduleRecyclerView = view.findViewById(R.id.scheduleRecyclerView);
+                itemView = view.findViewById(R.id.cinemaItemView);
             }
         }
     }

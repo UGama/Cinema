@@ -13,17 +13,6 @@
         android:background="@color/colorLineGray"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <android.support.constraint.Guideline
-        android:id="@+id/midGuideLine"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="30dp"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintGuide_percent="0.3"
-        />
-
     <TextView
         android:id="@+id/filmName"
         android:text="@string/test"
@@ -34,7 +23,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/midGuideLine"
+        app:layout_constraintBottom_toBottomOf="@id/cutLine"
+        app:layout_constraintVertical_bias="0.35"
         />
     <TextView
         android:id="@+id/information"
@@ -45,8 +35,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/midGuideLine"
-        app:layout_constraintBottom_toBottomOf="@id/cutLine"
+        app:layout_constraintTop_toBottomOf="@id/filmName"
         />
     <android.support.v7.widget.RecyclerView
         android:id="@+id/dateRecyclerView"
