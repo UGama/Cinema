@@ -6,6 +6,7 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,12 +47,16 @@ public class Screenings extends AppCompatActivity {
     private ImageView currentRemind2;
     private TextView currentDate2;
     private View currentView2;
+    private int supportNumber;
+    private List<View> viewList1;
+    private List<View> viewList2;
 
     private RecyclerView screeningsRecyclerView;
     private List<Screening> screeningList;
     private ImageView cutLine0;
     private View midPanel;
     private View topPanel;
+    private ImageView cutLine00;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,22 +82,10 @@ public class Screenings extends AppCompatActivity {
         filmName.setText(filmNameString);
         information = findViewById(R.id.information);
         information.setText("120分钟|动作|亨利·卡维尔 本·阿弗莱克 盖尔·加朵");
+        viewList1 = new ArrayList<>();
+        viewList2 = new ArrayList<>();
 
-        dateRecyclerView = findViewById(R.id.dateRecyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        dateRecyclerView.setLayoutManager(linearLayoutManager);
-        dateList = new ArrayList<>();
-        dateList.add("今天 12-01");
-        dateList.add("明天 12-02");
-        dateList.add("后天 12-03");
-        dateList.add("周四 12-04");
-        dateList.add("周五 12-05");
-        dateList.add("周六 12-06");
-        dateList.add("周日 12-07");
-        DateAdapter dateAdapter = new DateAdapter(dateList);
-        dateRecyclerView.setAdapter(dateAdapter);
-
+        observableScrollView = findViewById(R.id.scrollView);
         screeningsRecyclerView = findViewById(R.id.screeningsRecyclerView);
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
         screeningsRecyclerView.setLayoutManager(linearLayoutManager1);
@@ -110,33 +103,55 @@ public class Screenings extends AppCompatActivity {
 
         midPanel = findViewById(R.id.midPanel);
         topPanel = findViewById(R.id.topPanel);
+        cutLine0 = findViewById(R.id.cutLine0);
+        cutLine00 = findViewById(R.id.cutLine00);
         filmName2 = topPanel.findViewById(R.id.filmName);
         information2 = topPanel.findViewById(R.id.information);
+
+        dateRecyclerView = findViewById(R.id.dateRecyclerView);
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
+        dateRecyclerView.setLayoutManager(linearLayoutManager);
+        dateList = new ArrayList<>();
+        dateList.add("今天 12-01");
+        dateList.add("明天 12-02");
+        dateList.add("后天 12-03");
+        dateList.add("周四 12-04");
+        dateList.add("周五 12-05");
+        dateList.add("周六 12-06");
+        dateList.add("周日 12-07");
+        DateAdapter dateAdapter = new DateAdapter(dateList);
+        dateRecyclerView.setAdapter(dateAdapter);
+
         dateRecyclerView2 = topPanel.findViewById(R.id.dateRecyclerView);
         LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(this);
         linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
         dateRecyclerView2.setLayoutManager(linearLayoutManager2);
-        dateRecyclerView2.setAdapter(dateAdapter);
+        DateAdapter2 dateAdapter2 = new DateAdapter2(dateList);
+        dateRecyclerView2.setAdapter(dateAdapter2);
+        Log.i("Load dateAdapter2", "success");
         filmName2.setText(filmNameString);
         information2.setText("120分钟|动作|亨利·卡维尔 本·阿弗莱克 盖尔·加朵");
 
-        observableScrollView = findViewById(R.id.scrollView);
         observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
             @Override
             public void onScrollChanged(ScrollView scrollView, int x, int y, int oldX, int oldY) {
                 int[] panelLocation = new int[2];
                 midPanel.getLocationOnScreen(panelLocation);
-                cutLine0 = findViewById(R.id.cutLine0);
-                int midPanelX = panelLocation[0];
                 int midPanelY = panelLocation[1];
                 int statusBarHeight = getStatusBarHeight();
                 if (midPanelY <= statusBarHeight + cutLine0.getBottom()) {
                     topPanel.setVisibility(View.VISIBLE);
+                    cutLine00.setVisibility(View.VISIBLE);
                 } else {
                     topPanel.setVisibility(View.GONE);
+                    cutLine00.setVisibility(View.GONE);
                 }
             }
         });
+
+        Log.i("ViewList1", String.valueOf(viewList1.size()));
+        Log.i("ViewList2", String.valueOf(viewList2.size()));
     }
     public int getStatusBarHeight() {
         int result = 0;
@@ -146,6 +161,8 @@ public class Screenings extends AppCompatActivity {
         }
         return result;
     }
+
+
     private class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
 
         private List<String> dateList;
@@ -164,13 +181,28 @@ public class Screenings extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (view != currentView && view != currentView2) {
-                        currentRemind.setVisibility(View.GONE);
                         currentDate.setTextColor(getResources().getColor(R.color.colorTextGray));
-                        currentRemind = view.findViewById(R.id.remind);
+                        currentRemind.setVisibility(View.GONE);
                         currentDate = view.findViewById(R.id.date);
-                        currentRemind.setVisibility(View.VISIBLE);
+                        currentRemind = view.findViewById(R.id.remind);
                         currentDate.setTextColor(getResources().getColor(R.color.colorRemind));
+                        currentRemind.setVisibility(View.VISIBLE);
                         currentView = view;
+                        currentRemind2.setVisibility(View.GONE);
+                        currentDate2.setTextColor(getResources().getColor(R.color.colorTextGray));
+                        for (int i = 0; i < viewList1.size(); i++) {
+                            if (viewList1.get(i) == holder.dateView) {
+                                supportNumber = i;
+                                break;
+                            }
+                        }
+                        Log.i("ViewList1", String.valueOf(viewList1.size()));
+                        Log.i("Number", String.valueOf(supportNumber));
+                        currentView2 = viewList2.get(supportNumber);
+                        currentDate2 = currentView2.findViewById(R.id.date);
+                        currentRemind2 = currentView2.findViewById(R.id.remind);
+                        currentDate2.setTextColor(getResources().getColor(R.color.colorRemind));
+                        currentRemind2.setVisibility(View.VISIBLE);
                     }
                 }
             });
@@ -179,12 +211,12 @@ public class Screenings extends AppCompatActivity {
 
         @Override
         public void onBindViewHolder(DateAdapter.ViewHolder holder, int position) {
+            viewList1.add(holder.dateView);
             String date = dateList.get(position);
             if (position == 0) {
                 holder.date.setText(date);
                 holder.date.setTextColor(getResources().getColor(R.color.colorRemind));
                 holder.remind.setVisibility(View.VISIBLE);
-                holder.number = position;
                 currentView = holder.dateView;
                 currentRemind = holder.remind;
                 currentDate = holder.date;
@@ -202,7 +234,90 @@ public class Screenings extends AppCompatActivity {
             private TextView date;
             private ImageView remind;
             private View dateView;
-            private int number;
+
+            private ViewHolder(View view) {
+                super(view);
+                date = view.findViewById(R.id.date);
+                remind = view.findViewById(R.id.remind);
+                dateView = view.findViewById(R.id.dateView);
+            }
+        }
+    }
+
+    private class DateAdapter2 extends RecyclerView.Adapter<DateAdapter2.ViewHolder> {
+
+        private List<String> dateList;
+
+        private DateAdapter2(List<String> dateList) {
+            this.dateList = dateList;
+        }
+
+        @Override
+        public DateAdapter2.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.date_item, parent, false);
+            final DateAdapter2.ViewHolder holder = new DateAdapter2.ViewHolder(view);
+
+            holder.dateView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if (view != currentView && view != currentView2) {
+                        currentDate2.setTextColor(getResources().getColor(R.color.colorTextGray));
+                        currentRemind2.setVisibility(View.GONE);
+                        currentDate2 = view.findViewById(R.id.date);
+                        currentRemind2 = view.findViewById(R.id.remind);
+                        currentDate2.setTextColor(getResources().getColor(R.color.colorRemind));
+                        currentRemind2.setVisibility(View.VISIBLE);
+                        currentView2 = view;
+                        currentDate.setTextColor(getResources().getColor(R.color.colorTextGray));
+                        currentRemind.setVisibility(View.GONE);
+                        currentDate2.setTextColor(getResources().getColor(R.color.colorRemind));
+                        for (int i = 0; i < viewList2.size(); i++) {
+                            if (viewList2.get(i) == holder.dateView) {
+                                supportNumber = i;
+                                break;
+                            }
+                        }
+                        Log.i("ViewList2", String.valueOf(viewList2.size()));
+                        Log.i("Number", String.valueOf(supportNumber));
+                        currentView = viewList1.get(supportNumber);
+                        currentDate = currentView.findViewById(R.id.date);
+                        currentRemind = currentView.findViewById(R.id.remind);
+                        currentDate.setTextColor(getResources().getColor(R.color.colorRemind));
+                        currentRemind.setVisibility(View.VISIBLE);
+                    }
+                }
+            });
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(DateAdapter2.ViewHolder holder, int position) {
+            viewList2.add(holder.dateView);
+            String date = dateList.get(position);
+            if (position == 0) {
+                holder.date.setText(date);
+                holder.date.setTextColor(getResources().getColor(R.color.colorRemind));
+                holder.remind.setVisibility(View.VISIBLE);
+                currentView2 = holder.dateView;
+                currentRemind2 = holder.remind;
+                currentDate2 = holder.date;
+                topPanel.setVisibility(View.GONE);
+                cutLine00.setVisibility(View.GONE);
+            } else {
+                holder.date.setText(date);
+            }
+        }
+
+        @Override
+        public int getItemCount() {
+            return dateList.size();
+        }
+
+        class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView date;
+            private ImageView remind;
+            private View dateView;
 
             private ViewHolder(View view) {
                 super(view);

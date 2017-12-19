@@ -32,7 +32,7 @@
         app:layout_constraintBottom_toBottomOf="@id/topGuideLine"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
-    <Button
+    <ImageView
         android:id="@+id/search"
         android:background="@drawable/search"
         android:layout_width="30dp"
@@ -46,7 +46,7 @@
         android:id="@+id/support1"
         android:background="#f6f6f6"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="1dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topGuideLine" />
@@ -57,7 +57,7 @@
         android:orientation="horizontal"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintGuide_percent="0.25"
+        app:layout_constraintGuide_percent="0.24"
         />
     <android.support.constraint.Guideline
         android:id="@+id/guideLine20"
@@ -96,141 +96,151 @@
         app:layout_constraintGuide_percent="0.8"
         />
 
-    <Button
+    <TextView
         android:text="院线"
         android:textColor="@color/colorBase"
         android:textSize="16sp"
         android:background="@drawable/catalog"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideLine20"
         app:layout_constraintTop_toBottomOf="@id/support1"
         app:layout_constraintBottom_toTopOf="@id/support2"
         app:layout_constraintVertical_bias="0.1"
+        android:gravity="center"
         />
-    <Button
+    <TextView
         android:text="欧美"
         android:textColor="@color/colorBase"
         android:textSize="16sp"
         android:background="@drawable/catalog"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="@id/guideLine20"
         app:layout_constraintEnd_toEndOf="@id/guideLine40"
         app:layout_constraintTop_toBottomOf="@id/support1"
         app:layout_constraintBottom_toTopOf="@id/support2"
         app:layout_constraintVertical_bias="0.1"
+        android:gravity="center"
         />
-    <Button
+    <TextView
         android:text="日韩"
         android:textColor="@color/colorBase"
         android:textSize="16sp"
         android:background="@drawable/catalog"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="@id/guideLine40"
         app:layout_constraintEnd_toEndOf="@id/guideLine60"
         app:layout_constraintTop_toBottomOf="@id/support1"
         app:layout_constraintBottom_toTopOf="@id/support2"
         app:layout_constraintVertical_bias="0.1"
+        android:gravity="center"
         />
-    <Button
+    <TextView
         android:text="华语"
         android:textColor="@color/colorBase"
         android:textSize="16sp"
         android:background="@drawable/catalog"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="@id/guideLine60"
         app:layout_constraintEnd_toEndOf="@id/guideLine80"
         app:layout_constraintTop_toBottomOf="@id/support1"
         app:layout_constraintBottom_toTopOf="@id/support2"
         app:layout_constraintVertical_bias="0.1"
+        android:gravity="center"
         />
-    <Button
+    <TextView
         android:text="剧情"
         android:textColor="@color/colorBase"
         android:textSize="16sp"
         android:background="@drawable/catalog"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="@id/guideLine80"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/support1"
         app:layout_constraintBottom_toTopOf="@id/support2"
         app:layout_constraintVertical_bias="0.1"
+        android:gravity="center"
         />
-    <Button
+    <TextView
         android:text="喜剧"
         android:textColor="@color/colorBase"
         android:textSize="16sp"
         android:background="@drawable/catalog"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="@id/guideLine20"
         app:layout_constraintTop_toBottomOf="@id/support1"
         app:layout_constraintBottom_toTopOf="@id/support2"
         app:layout_constraintVertical_bias="0.9"
+        android:gravity="center"
         />
-    <Button
+    <TextView
         android:text="动作"
         android:textColor="@color/colorBase"
         android:textSize="16sp"
         android:background="@drawable/catalog"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="@id/guideLine20"
         app:layout_constraintEnd_toEndOf="@id/guideLine40"
         app:layout_constraintTop_toBottomOf="@id/support1"
         app:layout_constraintBottom_toTopOf="@id/support2"
         app:layout_constraintVertical_bias="0.9"
+        android:gravity="center"
         />
-    <Button
+    <TextView
         android:text="奇幻"
         android:textColor="@color/colorBase"
         android:textSize="16sp"
         android:background="@drawable/catalog"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="@id/guideLine40"
         app:layout_constraintEnd_toEndOf="@id/guideLine60"
         app:layout_constraintTop_toBottomOf="@id/support1"
         app:layout_constraintBottom_toTopOf="@id/support2"
         app:layout_constraintVertical_bias="0.9"
+        android:gravity="center"
         />
-    <Button
+    <TextView
         android:text="犯罪"
         android:textColor="@color/colorBase"
         android:textSize="16sp"
         android:background="@drawable/catalog"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="@id/guideLine60"
         app:layout_constraintEnd_toEndOf="@id/guideLine80"
         app:layout_constraintTop_toBottomOf="@id/support1"
         app:layout_constraintBottom_toTopOf="@id/support2"
         app:layout_constraintVertical_bias="0.9"
+        android:gravity="center"
         />
-    <Button
+    <TextView
         android:text="更多"
         android:textColor="@color/colorBase"
         android:textSize="16sp"
         android:background="@drawable/catalog"
-        android:layout_width="60dp"
+        android:layout_width="50dp"
         android:layout_height="30dp"
         app:layout_constraintStart_toStartOf="@id/guideLine80"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/support1"
         app:layout_constraintBottom_toTopOf="@id/support2"
         app:layout_constraintVertical_bias="0.9"
+        android:gravity="center"
         />
     <ImageView
         android:id="@+id/support2"
         android:background="#f6f6f6"
         android:layout_width="match_parent"
-        android:layout_height="10dp"
+        android:layout_height="1dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/topGuideLine2" />
@@ -249,6 +259,7 @@
             android:id="@+id/recyclerView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:background="#ffffff"
             />
 
     </android.support.v4.widget.SwipeRefreshLayout>
@@ -262,7 +273,7 @@
         android:layout_marginBottom="52dp"
         android:src="#f6f6f6"
         />
-    <Button
+    <ImageView
         android:id="@+id/find"
         android:layout_width="25dp"
         android:layout_height="25dp"
@@ -273,7 +284,7 @@
         app:layout_constraintEnd_toStartOf="@id/midGuideLine"
         app:layout_constraintVertical_bias="0.3"
         app:layout_constraintHorizontal_bias="0.3"/>
-    <Button
+    <ImageView
         android:id="@+id/recommend"
         android:layout_width="25dp"
         android:layout_height="25dp"
@@ -284,7 +295,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.3"
         />
-    <Button
+    <ImageView
         android:id="@+id/mine"
         android:background="@drawable/mine1"
         android:layout_width="25dp"
@@ -334,13 +345,59 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.7"
         />
+    
 
-    <LinearLayout
-        android:id="@+id/loading"
-        android:background="@drawable/loading"
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/loadingLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        />
+        android:background="#ffffff"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/loading"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            />
+        <ImageView
+            android:id="@+id/loadingCircle1"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/loading_circle"
+            app:layout_constraintTop_toTopOf="@id/loadingCircle2"
+            app:layout_constraintBottom_toBottomOf="@id/loadingCircle2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.45"
+            />
+        <ImageView
+            android:id="@+id/loadingCircle2"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/loading_circle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintVertical_bias="0.75"
+            />
+        <ImageView
+            android:id="@+id/loadingCircle3"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/loading_circle"
+            app:layout_constraintTop_toTopOf="@id/loadingCircle2"
+            app:layout_constraintBottom_toBottomOf="@id/loadingCircle2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.55"
+            />
+
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

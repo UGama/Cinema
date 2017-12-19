@@ -113,6 +113,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recommend.setBackgroundResource(R.drawable.recommend2);
         recommendText = findViewById(R.id.recommendText);
         recommendText.setTextColor(this.getResources().getColor(R.color.colorBase));
+
+        CloudServerOperate();
     }
 
     @Override
@@ -228,5 +230,43 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             container.addView(view);
             return view;
         }
+    }
+    public void CloudServerOperate() {
+        /*final List<AVObject> avObjectList = new ArrayList<>();
+        AVObject Film1 = new AVObject("Film");// 学生 Tom
+        Film1.put("Name", "东方快车谋杀案");
+        Film1.put("Subhead", "大侦探波洛巧破东方快车谜案");
+        avObjectList.add(Film1);
+        AVObject Film2 = new AVObject("Film");// 学生 Tom
+        Film2.put("Name", "死侍2");
+        Film2.put("Subhead", "嘴碎的蜘蛛侠电影");
+        avObjectList.add(Film2);
+        AVObject Film3 = new AVObject("Film");// 学生 Tom
+        Film3.put("Name", "牌皇");
+        Film3.put("Subhead", "肌肉版卡牌");
+        avObjectList.add(Film3);
+        AVObject Film4 = new AVObject("Film");// 学生 Tom
+        Film4.put("Name", "阿凡达2");
+        Film4.put("Subhead", "人类重返潘多拉星球");
+        avObjectList.add(Film4);
+        AVObject Film5 = new AVObject("Film");// 学生 Tom
+        Film5.put("Name", "移动迷宫：死亡解药");
+        Film5.put("Subhead", "移动迷宫系列影片的第三部");
+        avObjectList.add(Film5);
+
+        AVQuery<AVObject> avQuery = new AVQuery<>("Theme");
+        avQuery.getInBackground("5a33998cd50eee007872a2c1", new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                for (AVObject avObject0 : avObjectList) {
+                    AVObject ThemeFilmMap = new AVObject("ThemeFilmMap");
+                    ThemeFilmMap.put("Film", avObject0);
+                    ThemeFilmMap.put("Theme", avObject);
+                    ThemeFilmMap.saveInBackground();
+                }
+            }
+        });*/
+
+
     }
 }
