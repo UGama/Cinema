@@ -61,6 +61,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private List<String> urlList;
     private List<Bitmap> bitmapList;
 
+    private List<String> supportList1;
+    private List<String> supportList2;
+
     private int SupportNumber;
     @Override
 
@@ -124,16 +127,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        film1 = findViewById(R.id.film1);
-        film1.setOnClickListener(this);
-        film2 = findViewById(R.id.film2);
-        film2.setOnClickListener(this);
-        film3 = findViewById(R.id.film3);
-        film3.setOnClickListener(this);
-        filmText1 = findViewById(R.id.film1Text);
-        filmText2 = findViewById(R.id.film2Text);
-        filmText3 = findViewById(R.id.film3Text);
-
         find = findViewById(R.id.find);
         find.setOnClickListener(this);
         recommend = findViewById(R.id.recommend);
@@ -156,8 +149,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Loading();
         initData();
-
-        CloudServerOperate();
     }
 
     @Override
@@ -336,6 +327,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             avObject.put("Distance", cinema0.getDistance());
             avObject.saveInBackground();
         }*/
+        supportList1 = new ArrayList<>();
+        supportList2 = new ArrayList<>();
+        AVQuery<AVObject> avObjectAVQuery = new AVQuery<>("Cinema");
+        avObjectAVQuery.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                for (AVObject avObject : list) {
+                    Log.i("CinemaName", avObject.getString("Name"));
+                    supportList1.add(avObject.getString("Name"));
+                }
+
+            }
+        });
+
+
     }
 
     public void Loading() {
@@ -521,10 +527,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 getUrl();
             }
         });
-        animatorSet1.end();
-        animatorSet2.end();
-        animatorSet3.end();
-        loadingLayout.setVisibility(View.GONE);
     }
 
     public void getUrl() {
@@ -555,6 +557,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             public void done(byte[] bytes, AVException e) {
                 Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
                 bitmapList.add(bitmap);
+                Log.i("SupportNumber2", String.valueOf(SupportNumber));
                 if (SupportNumber == 3) {
                     SupportNumber = 0;
                     setBitmap();
@@ -566,6 +569,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void setBitmap() {
-        
+        film1 = findViewById(R.id.film1);
+        film1.setOnClickListener(this);
+        film1.setImageBitmap(bitmapList.get(SupportNumber++));
+        film2 = findViewById(R.id.film2);
+        film2.setOnClickListener(this);
+        film2.setImageBitmap(bitmapList.get(SupportNumber++));
+        film3 = findViewById(R.id.film3);
+        film3.setOnClickListener(this);
+        film3.setImageBitmap(bitmapList.get(SupportNumber));
+        SupportNumber = 0;
+        filmText1 = findViewById(R.id.film1Text);
+        filmText1.setText(filmList.get(SupportNumber++).getName());
+        filmText2 = findViewById(R.id.film2Text);
+        filmText2.setText(filmList.get(SupportNumber++).getName());
+        filmText3 = findViewById(R.id.film3Text);
+        filmText3.setText(filmList.get(SupportNumber).getName());
+        SupportNumber = 0;
+        animatorSet1.end();
+        animatorSet2.end();
+        animatorSet3.end();
+        loadingLayout.setVisibility(View.GONE);
+        CloudServerOperate();
     }
+
 }

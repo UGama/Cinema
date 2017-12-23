@@ -1,11 +1,16 @@
 package com.example.cinema;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,6 +58,14 @@ public class Screenings extends AppCompatActivity {
     private List<View> viewList1;
     private List<View> viewList2;
 
+    private ConstraintLayout loadingLayout;
+    private ImageView loadingCircle1;
+    private ImageView loadingCircle2;
+    private ImageView loadingCircle3;
+    private AnimatorSet animatorSet1;
+    private AnimatorSet animatorSet2;
+    private AnimatorSet animatorSet3;
+
     private RecyclerView screeningsRecyclerView;
     private List<Screening> screeningList;
     private ImageView cutLine0;
@@ -84,7 +97,6 @@ public class Screenings extends AppCompatActivity {
         filmName = findViewById(R.id.filmName);
         filmName.setText(filmNameString);
         information = findViewById(R.id.information);
-        information.setText("120分钟|动作|亨利·卡维尔 本·阿弗莱克 盖尔·加朵");
         date1 = findViewById(R.id.date);
         date1.setText(date);
         viewList1 = new ArrayList<>();
@@ -116,7 +128,6 @@ public class Screenings extends AppCompatActivity {
         date2.setText(date);
 
         filmName2.setText(filmNameString);
-        information2.setText("120分钟|动作|亨利·卡维尔 本·阿弗莱克 盖尔·加朵");
 
         observableScrollView.setScrollViewListener(new ObservableScrollView.ScrollViewListener() {
             @Override
@@ -135,7 +146,21 @@ public class Screenings extends AppCompatActivity {
             }
         });
         observableScrollView.smoothScrollTo(0, 20);
+
+        loadingLayout = findViewById(R.id.loadingLayout);
+        loadingCircle1 = findViewById(R.id.loadingCircle1);
+        loadingCircle2 = findViewById(R.id.loadingCircle2);
+        loadingCircle3 = findViewById(R.id.loadingCircle3);
+
+        Loading();
+        initData();
+
     }
+
+    public void initData() {
+
+    }
+
     public int getStatusBarHeight() {
         int result = 0;
         int resourceId = getResources().getIdentifier("status_bar_height", "dimen", "android");
@@ -196,6 +221,174 @@ public class Screenings extends AppCompatActivity {
                 screeningView = view.findViewById(R.id.screeningView);
             }
         }
+    }
+
+    public void Loading() {
+        Log.i("Loading", "Start");
+        loadingLayout.setVisibility(View.VISIBLE);
+
+        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(loadingCircle1, "alpha", 1, 0);
+        objectAnimator1.setStartDelay(600);
+        objectAnimator1.start();
+        objectAnimator1.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet1.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(loadingCircle2, "alpha", 1, 0);
+        objectAnimator2.setStartDelay(600);
+        objectAnimator2.start();
+        objectAnimator2.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet2.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(loadingCircle3, "alpha", 1, 0);
+        objectAnimator3.setStartDelay(600);
+        objectAnimator3.start();
+        objectAnimator3.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet3.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        ObjectAnimator objectAnimator11 = ObjectAnimator.ofFloat(loadingCircle1, "alpha", 0, 1);
+        objectAnimator11.setDuration(100);
+        objectAnimator11.setStartDelay(300);
+        ObjectAnimator objectAnimator12 = ObjectAnimator.ofFloat(loadingCircle1, "alpha", 1, 0);
+        objectAnimator12.setDuration(100);
+        objectAnimator12.setStartDelay(1900);
+        animatorSet1 = new AnimatorSet();
+        animatorSet1.play(objectAnimator12).after(objectAnimator11);
+        animatorSet1.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet1.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        ObjectAnimator objectAnimator21 = ObjectAnimator.ofFloat(loadingCircle2, "alpha", 0, 1);
+        objectAnimator21.setDuration(100);
+        objectAnimator21.setStartDelay(1000);
+        ObjectAnimator objectAnimator22 = ObjectAnimator.ofFloat(loadingCircle2, "alpha", 1, 0);
+        objectAnimator22.setDuration(100);
+        objectAnimator22.setStartDelay(1200);
+        animatorSet2 = new AnimatorSet();
+        animatorSet2.play(objectAnimator22).after(objectAnimator21);
+        animatorSet2.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet2.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        ObjectAnimator objectAnimator31 = ObjectAnimator.ofFloat(loadingCircle3, "alpha", 0, 1);
+        objectAnimator31.setDuration(100);
+        objectAnimator31.setStartDelay(1700);
+        ObjectAnimator objectAnimator32 = ObjectAnimator.ofFloat(loadingCircle3, "alpha", 1, 0);
+        objectAnimator32.setDuration(100);
+        objectAnimator32.setStartDelay(500);
+        animatorSet3 = new AnimatorSet();
+        animatorSet3.play(objectAnimator32).after(objectAnimator31);
+        animatorSet3.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet3.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
     }
 
     /*private class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
