@@ -45,6 +45,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/topGuideLine"
+        android:layout_marginStart="20dp"
+        />
+    <ImageView
+        android:src="@drawable/film_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintEnd_toStartOf="@id/filmName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/topGuideLine"
+        android:layout_marginEnd="10dp"
         />
 
     <ImageView
@@ -93,5 +103,28 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cutLine" />
+
+    <android.support.constraint.ConstraintLayout
+        android:background="#ffffff"
+        android:id="@+id/loading"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toStartOf="@id/CinemaRecyclerView"
+        app:layout_constraintEnd_toEndOf="@id/CinemaRecyclerView"
+        app:layout_constraintTop_toTopOf="@id/CinemaRecyclerView"
+        app:layout_constraintBottom_toBottomOf="@id/CinemaRecyclerView"
+        android:visibility="gone"
+        >
+        <ImageView
+            android:id="@+id/loadingCircle"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/loadingcircle"
+            />
+    </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

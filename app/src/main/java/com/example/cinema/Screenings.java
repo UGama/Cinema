@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -30,6 +29,7 @@ public class Screenings extends AppCompatActivity {
     private String cinemaPosition;
     private TextView distance;
     private String cinemaDistance;
+    private String date;
 
     private ObservableScrollView observableScrollView;
 
@@ -48,6 +48,8 @@ public class Screenings extends AppCompatActivity {
     private TextView currentDate2;
     private View currentView2;
     private int supportNumber;
+    private TextView date1;
+    private TextView date2;
     private List<View> viewList1;
     private List<View> viewList2;
 
@@ -67,6 +69,7 @@ public class Screenings extends AppCompatActivity {
         cinemaPosition = intent.getStringExtra("CinemaPosition");
         cinemaDistance = intent.getStringExtra("Distance");
         filmNameString = intent.getStringExtra("FilmName");
+        date = intent.getStringExtra("Date");
 
         cinemaName = findViewById(R.id.cinemaName);
         cinemaName2 = findViewById(R.id.cinemaName2);
@@ -82,6 +85,8 @@ public class Screenings extends AppCompatActivity {
         filmName.setText(filmNameString);
         information = findViewById(R.id.information);
         information.setText("120分钟|动作|亨利·卡维尔 本·阿弗莱克 盖尔·加朵");
+        date1 = findViewById(R.id.date);
+        date1.setText(date);
         viewList1 = new ArrayList<>();
         viewList2 = new ArrayList<>();
 
@@ -107,29 +112,9 @@ public class Screenings extends AppCompatActivity {
         cutLine00 = findViewById(R.id.cutLine00);
         filmName2 = topPanel.findViewById(R.id.filmName);
         information2 = topPanel.findViewById(R.id.information);
+        date2 = topPanel.findViewById(R.id.date);
+        date2.setText(date);
 
-        dateRecyclerView = findViewById(R.id.dateRecyclerView);
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
-        linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
-        dateRecyclerView.setLayoutManager(linearLayoutManager);
-        dateList = new ArrayList<>();
-        dateList.add("今天 12-01");
-        dateList.add("明天 12-02");
-        dateList.add("后天 12-03");
-        dateList.add("周四 12-04");
-        dateList.add("周五 12-05");
-        dateList.add("周六 12-06");
-        dateList.add("周日 12-07");
-        DateAdapter dateAdapter = new DateAdapter(dateList);
-        dateRecyclerView.setAdapter(dateAdapter);
-
-        dateRecyclerView2 = topPanel.findViewById(R.id.dateRecyclerView);
-        LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(this);
-        linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-        dateRecyclerView2.setLayoutManager(linearLayoutManager2);
-        DateAdapter2 dateAdapter2 = new DateAdapter2(dateList);
-        dateRecyclerView2.setAdapter(dateAdapter2);
-        Log.i("Load dateAdapter2", "success");
         filmName2.setText(filmNameString);
         information2.setText("120分钟|动作|亨利·卡维尔 本·阿弗莱克 盖尔·加朵");
 
@@ -149,9 +134,7 @@ public class Screenings extends AppCompatActivity {
                 }
             }
         });
-
-        Log.i("ViewList1", String.valueOf(viewList1.size()));
-        Log.i("ViewList2", String.valueOf(viewList2.size()));
+        observableScrollView.smoothScrollTo(0, 20);
     }
     public int getStatusBarHeight() {
         int result = 0;
@@ -162,8 +145,60 @@ public class Screenings extends AppCompatActivity {
         return result;
     }
 
+    private class ScreeningsAdapter extends RecyclerView.Adapter<ScreeningsAdapter.ViewHolder> {
+        private List<Screening> screeningList;
 
-    private class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
+        private ScreeningsAdapter(List<Screening> screeningList) {
+            this.screeningList = screeningList;
+        }
+
+        @Override
+        public ScreeningsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            View view = LayoutInflater.from(parent.getContext())
+                    .inflate(R.layout.screenings_item, parent, false);
+            final ScreeningsAdapter.ViewHolder holder = new ScreeningsAdapter.ViewHolder(view);
+            holder.screeningView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                }
+            });
+            return holder;
+        }
+
+        @Override
+        public void onBindViewHolder(ScreeningsAdapter.ViewHolder holder, int position) {
+            Screening screening = screeningList.get(position);
+            holder.startTime.setText(screening.getStartTime());
+            holder.endTime.setText(screening.getEndTime());
+            holder.price.setText(screening.getPrice());
+            holder.type.setText(screening.getType());
+        }
+
+        @Override
+        public int getItemCount() {
+            return screeningList.size();
+        }
+
+        public class ViewHolder extends RecyclerView.ViewHolder {
+            private TextView startTime;
+            private TextView endTime;
+            private TextView price;
+            private TextView type;
+            private View screeningView;
+
+            private ViewHolder(View view) {
+                super(view);
+                startTime = view.findViewById(R.id.startTime);
+                endTime = view.findViewById(R.id.endTime);
+                price = view.findViewById(R.id.price);
+                type = view.findViewById(R.id.type);
+                screeningView = view.findViewById(R.id.screeningView);
+            }
+        }
+    }
+
+    /*private class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
 
         private List<String> dateList;
 
@@ -326,58 +361,7 @@ public class Screenings extends AppCompatActivity {
                 dateView = view.findViewById(R.id.dateView);
             }
         }
-    }
+    }*/
 
-    private class ScreeningsAdapter extends RecyclerView.Adapter<ScreeningsAdapter.ViewHolder> {
-        private List<Screening> screeningList;
 
-        private ScreeningsAdapter(List<Screening> screeningList) {
-            this.screeningList = screeningList;
-        }
-
-        @Override
-        public ScreeningsAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            View view = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.screenings_item, parent, false);
-            final ScreeningsAdapter.ViewHolder holder = new ScreeningsAdapter.ViewHolder(view);
-            holder.screeningView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                }
-            });
-            return holder;
-        }
-
-        @Override
-        public void onBindViewHolder(ScreeningsAdapter.ViewHolder holder, int position) {
-            Screening screening = screeningList.get(position);
-            holder.startTime.setText(screening.getStartTime());
-            holder.endTime.setText(screening.getEndTime());
-            holder.price.setText(screening.getPrice());
-            holder.type.setText(screening.getType());
-        }
-
-        @Override
-        public int getItemCount() {
-            return screeningList.size();
-        }
-
-        public class ViewHolder extends RecyclerView.ViewHolder {
-            private TextView startTime;
-            private TextView endTime;
-            private TextView price;
-            private TextView type;
-            private View screeningView;
-
-            private ViewHolder(View view) {
-                super(view);
-                startTime = view.findViewById(R.id.startTime);
-                endTime = view.findViewById(R.id.endTime);
-                price = view.findViewById(R.id.price);
-                type = view.findViewById(R.id.type);
-                screeningView = view.findViewById(R.id.screeningView);
-            }
-        }
-    }
 }

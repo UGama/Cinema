@@ -28,13 +28,25 @@
         android:id="@+id/cinemaName"
         android:text="@string/test"
         android:textColor="#000000"
-        android:textSize="18sp"
+        android:textSize="16sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/topGuideLine"
+        android:gravity="center"
+        android:maxEms="15"
+        android:layout_marginStart="20dp"
+        />
+    <ImageView
+        android:src="@drawable/cinema_icon"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        app:layout_constraintEnd_toStartOf="@id/cinemaName"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/topGuideLine"
+        android:layout_marginEnd="10dp"
         />
 
     <com.example.cinema.ObservableScrollView
@@ -93,6 +105,7 @@
                 android:layout_marginStart="12dp"
                 app:layout_constraintBottom_toBottomOf="@+id/cinemaPic"
                 app:layout_constraintVertical_bias="0.3"
+                android:maxEms="15"
                 />
             <TextView
                 android:id="@+id/position"
@@ -162,6 +175,7 @@
         app:layout_constraintTop_toBottomOf="@id/topGuideLine"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="gone"
         />
     <ImageView
         android:id="@+id/cutLine00"

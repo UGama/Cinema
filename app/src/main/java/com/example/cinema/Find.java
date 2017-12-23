@@ -51,16 +51,22 @@ public class Find extends AppCompatActivity implements View.OnClickListener {
     private ImageView loadingCircle1;
     private ImageView loadingCircle2;
     private ImageView loadingCircle3;
-    private AnimatorSet animatorSet0;
     private AnimatorSet animatorSet1;
     private AnimatorSet animatorSet2;
     private AnimatorSet animatorSet3;
 
     private List<Theme> themeList;
     private List<String> stringList;
+    private List<String> themeIdList;
     private List<String> urlList;
     private List<byte[]> byteList;
+    private String[][] filmsIds;
+    private Film[][] films;
+    private String[][] url;
+    private int[] filmsCount;
     private int SupportNumber;
+    private int SupportNumber2;
+    private int SupportNumber3;
 
 
     @Override
@@ -76,7 +82,9 @@ public class Find extends AppCompatActivity implements View.OnClickListener {
         themeList = new ArrayList<>();
         urlList = new ArrayList<>();
         byteList = new ArrayList<>();
+        themeIdList = new ArrayList<>();
         SupportNumber = 0;
+        SupportNumber2 = 0;
         Loading();
         InitData();
 
@@ -130,16 +138,7 @@ public class Find extends AppCompatActivity implements View.OnClickListener {
             LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getBaseContext());
             linearLayoutManager1.setOrientation(LinearLayoutManager.HORIZONTAL);
             holder.filmsList.setLayoutManager(linearLayoutManager1);
-            Film filmTest = new Film(R.drawable.film11, "test", "test");
-            Film filmTest1 = new Film(R.drawable.film11, "test", "test");
-            Film filmTest2 = new Film(R.drawable.film11, "test", "test");
-            Film filmTest3 = new Film(R.drawable.film11, "test", "test");
-            List<Film> films = new ArrayList<>();
-            films.add(filmTest);
-            films.add(filmTest1);
-            films.add(filmTest2);
-            films.add(filmTest3);
-            FilmAdapter filmAdapter = new FilmAdapter(films);
+            FilmAdapter filmAdapter = new FilmAdapter(films, position);
             holder.filmsList.setAdapter(filmAdapter);
         }
 
@@ -166,10 +165,12 @@ public class Find extends AppCompatActivity implements View.OnClickListener {
     }
 
     private class FilmAdapter extends RecyclerView.Adapter<FilmAdapter.ViewHolder2> {
-        private List<Film> filmList;
+        private Film[] films;
+        private int Count;
 
-        private FilmAdapter(List<Film> filmList) {
-            this.filmList= filmList;
+        private FilmAdapter(Film[][] films, int Number) {
+            this.films = films[Number];
+            this.Count = filmsCount[Number];
         }
 
         @Override
@@ -179,17 +180,18 @@ public class Find extends AppCompatActivity implements View.OnClickListener {
             final ViewHolder2 holder2 = new ViewHolder2(view);
             return holder2;
         }
+
         @Override
         public void onBindViewHolder(FilmAdapter.ViewHolder2 holder2, int position) {
-            Film film = filmList.get(position);
-            holder2.FilmImage.setBackgroundResource(film.getSourceId());
-            holder2.FilmName.setText(" " + film.getName() + " ");
-            holder2.Subhead.setText(" " + film.getSubhead() + " ");
+            Film film = films[position];
+            holder2.FilmName.setText(film.getName());
+            holder2.Subhead.setText(film.getSubhead());
+            holder2.FilmImage.setImageBitmap(film.getBitmap());
         }
 
         @Override
         public int getItemCount() {
-            return filmList.size();
+            return Count;
         }
 
         class ViewHolder2 extends RecyclerView.ViewHolder {
@@ -209,7 +211,6 @@ public class Find extends AppCompatActivity implements View.OnClickListener {
     }
 
     public void InitData() {
-
         stringList = new ArrayList<>();
         AVQuery<AVObject> avObjectAVQuery = new AVQuery<>("Theme");
         avObjectAVQuery.limit(5);
@@ -217,110 +218,317 @@ public class Find extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void done(final List<AVObject> list, AVException e) {
                 for (final AVObject avObject : list) {
-                    Log.i("avObject", avObject.getString("ThemeName"));
+                    Log.i("stringList", avObject.getString("ThemeName"));
+                    Log.i("ObjectId", avObject.getObjectId());
                     stringList.add(avObject.getString("ThemeName"));
+                    themeIdList.add(avObject.getObjectId());
                     Theme theme = new Theme(avObject.getString("ThemeName"),
                             avObject.getString("Subhead"));
                     themeList.add(theme);
                 }
+                SupportNumber = 0;
                 getUrl();
             }
         });
     }
 
     public void getUrl() {
-        SupportNumber = 0;
-        Log.i("stringsList", String.valueOf(stringList.size()));
-        for (int i = 0; i < stringList.size(); i++) {
+        if (SupportNumber != stringList.size() - 1) {
             AVQuery<AVObject> avObjectAVQuery1 = new AVQuery<>("_File");
-            avObjectAVQuery1.whereEqualTo("name", stringList.get(i) + ".jpg");
+            avObjectAVQuery1.whereEqualTo("name", stringList.get(SupportNumber) + ".jpg");
             avObjectAVQuery1.getFirstInBackground(new GetCallback<AVObject>() {
                 @Override
                 public void done(AVObject avObject1, AVException e) {
                     Log.i("url", avObject1.getString("url"));
                     urlList.add(avObject1.getString("url"));
                     SupportNumber++;
-                    if (SupportNumber == stringList.size()) {
-                        getBitmap();
-                    }
-
-                            /*if (integer == 100 && avObject == list.get(list.size() - 1)) {
-                                Log.i("List", String.valueOf(list.size()));
-
-                                });
-                            }*/
-
+                    getUrl();
+                }
+            });
+        } else {
+            AVQuery<AVObject> avObjectAVQuery1 = new AVQuery<>("_File");
+            avObjectAVQuery1.whereEqualTo("name", stringList.get(SupportNumber) + ".jpg");
+            avObjectAVQuery1.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject1, AVException e) {
+                    Log.i("url", avObject1.getString("url"));
+                    urlList.add(avObject1.getString("url"));
+                    SupportNumber = 0;
+                    getBitmap();
                 }
             });
         }
-
     }
 
     public void getBitmap() {
-        SupportNumber = 0;
-        for (int i = 0; i < urlList.size(); i++) {
-            Log.i("Number", String.valueOf(i));
-            SupportNumber++;
-            AVFile avFile = new AVFile("ThemePic", urlList.get(i), new HashMap<String, Object>());
-            if (SupportNumber != urlList.size()) {
-                avFile.getDataInBackground(new GetDataCallback() {
-                    @Override
-                    public void done(byte[] bytes, AVException e) {
-                        byteList.add(bytes);
+        if (SupportNumber != urlList.size() - 1) {
+            AVFile avFile = new AVFile("ThemePic", urlList.get(SupportNumber), new HashMap<String, Object>());
+            avFile.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] bytes, AVException e) {
+                    byteList.add(bytes);
+                }
+            }, new ProgressCallback() {
+                @Override
+                public void done(Integer integer) {
+                    if (integer == 100) {
+                        SupportNumber++;
+                        getBitmap();
                     }
-                });
-            } else {
-                avFile.getDataInBackground(new GetDataCallback() {
-                    @Override
-                    public void done(byte[] bytes, AVException e) {
-                        byteList.add(bytes);
-                    }
-                }, new ProgressCallback() {
-                    @Override
-                    public void done(Integer integer) {
-                        if (integer == 100) {
-                            getBitmap2();
-                        }
-                    }
-                });
-            }
-
+                }
+            });
+        } else {
+            AVFile avFile = new AVFile("ThemePic", urlList.get(SupportNumber), new HashMap<String, Object>());
+            avFile.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] bytes, AVException e) {
+                    byteList.add(bytes);
+                    getBitmap2();
+                }
+            });
         }
     }
 
     public void getBitmap2() {
+        Log.i("byteList", String.valueOf(byteList.size()));
         for (int i = 0; i < byteList.size(); i++) {
             Bitmap bitmap = BitmapFactory.decodeByteArray(byteList.get(i), 0, byteList.get(i).length);
-            loadingLayout.setVisibility(View.GONE);
-            recyclerView = findViewById(R.id.recyclerView);
-            LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
-            recyclerView.setLayoutManager(linearLayoutManager);
-            final ThemeAdapter themeAdapter = new ThemeAdapter(themeList);
-            recyclerView.setAdapter(themeAdapter);
+            themeList.get(i).setBitmap(bitmap);
+        }
+        SupportNumber = 0;
+        filmsCount = new int[stringList.size()];
+        films = new Film[stringList.size()][10];
+        filmsIds = new String[stringList.size()][10];
+        url = new String[stringList.size()][10];
+        SupportNumber3 = 0;
+        getFilmData();
+    }
 
-            swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+    public void getFilmData() {
+        SupportNumber2 = 0;
+        Log.i("SupportNumber", String.valueOf(SupportNumber));
+        if (SupportNumber != themeIdList.size() - 1) {
+            AVObject avObject = AVObject.createWithoutData("Theme", themeIdList.get(SupportNumber));
+            Log.i("ThemeIdList", themeIdList.get(SupportNumber));
+            AVQuery<AVObject> query = new AVQuery<>("ThemeFilmMap");
+            query.whereEqualTo("Theme", avObject);
+            query.findInBackground(new FindCallback<AVObject>() {
                 @Override
-                public void onRefresh() {
-                    themeAdapter.notifyDataSetChanged();
-                    swipeRefreshLayout.setRefreshing(false);
+                public void done(List<AVObject> list, AVException e) {
+                    for (final AVObject avObject1 : list) {
+                        AVObject film = avObject1.getAVObject("Film");
+                        //Log.i("filmsId", film.getObjectId());
+                        Log.i("IdInformation", String.valueOf(SupportNumber) + " "
+                                + String.valueOf(SupportNumber2) + " "
+                                + film.getObjectId());
+                        filmsIds[SupportNumber][SupportNumber2++] = film.getObjectId();
+                    }
+                    if (SupportNumber2 == list.size()) {
+                        filmsCount[SupportNumber] = list.size();
+                        Log.i("filmsCount", String.valueOf(filmsCount[SupportNumber]));
+                        SupportNumber++;
+                        getFilmData();
+                    }
+                }
+            });
+        } else {
+            AVObject avObject = AVObject.createWithoutData("Theme", themeIdList.get(SupportNumber));
+            Log.i("ThemeIdList", themeIdList.get(SupportNumber));
+            AVQuery<AVObject> query = new AVQuery<>("ThemeFilmMap");
+            query.whereEqualTo("Theme", avObject);
+            query.findInBackground(new FindCallback<AVObject>() {
+                @Override
+                public void done(List<AVObject> list, AVException e) {
+                    for (final AVObject avObject1 : list) {
+                        AVObject film = avObject1.getAVObject("Film");
+                        //Log.i("filmsId", film.getObjectId());
+                        Log.i("IdInformation", String.valueOf(SupportNumber) + " "
+                                + String.valueOf(SupportNumber2) + " "
+                                + film.getObjectId());
+                        filmsIds[SupportNumber][SupportNumber2++] = film.getObjectId();
+                    }
+                    if (SupportNumber2 == list.size()) {
+                        filmsCount[SupportNumber] = list.size();
+                        Log.i("filmsCount", String.valueOf(filmsCount[SupportNumber]));
+                        SupportNumber = 0;
+                        SupportNumber2 = 0;
+                        SupportNumber3 = 0;
+                        getFilmInformation();
+                    }
+                }
+            });
+        }
+
+    }
+    public void getFilmInformation(){
+        if (SupportNumber3 < filmsCount[SupportNumber] - 1) {
+            AVQuery<AVObject> query = new AVQuery<>("Film");
+            query.getInBackground(filmsIds[SupportNumber][SupportNumber3], new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject, AVException e) {
+                    Film film = new Film(avObject.getString("Name"),
+                            " " + avObject.getString("Subhead") + " ");
+                    Log.i("Information", String.valueOf(SupportNumber) + " "
+                            + String.valueOf(SupportNumber3) + " "
+                            + film.getName() + " " + film.getSubhead());
+                    films[SupportNumber][SupportNumber3++] = film;
+                    getFilmInformation();
+                }
+            });
+        } else if (SupportNumber != themeIdList.size() - 1 && SupportNumber3 == filmsCount[SupportNumber] - 1) {
+            AVQuery<AVObject> query = new AVQuery<>("Film");
+            query.getInBackground(filmsIds[SupportNumber][SupportNumber3], new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject, AVException e) {
+                    Film film = new Film(avObject.getString("Name"),
+                            " " + avObject.getString("Subhead") + " ");
+                    Log.i("Information", String.valueOf(SupportNumber) + " "
+                            + String.valueOf(SupportNumber3) + " "
+                            + film.getName() + " " + film.getSubhead());
+                    films[SupportNumber][SupportNumber3++] = film;
+                    SupportNumber++;
+                    SupportNumber3 = 0;
+                    getFilmInformation();
+                }
+            });
+        } else {
+            AVQuery<AVObject> query = new AVQuery<>("Film");
+            query.getInBackground(filmsIds[SupportNumber][SupportNumber3], new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject, AVException e) {
+                    Film film = new Film(avObject.getString("Name"),
+                            " " + avObject.getString("Subhead") + " ");
+                    Log.i("Information", String.valueOf(SupportNumber) + " "
+                            + String.valueOf(SupportNumber3) + " "
+                            + film.getName() + " " + film.getSubhead());
+                    films[SupportNumber][SupportNumber3++] = film;
+                    SupportNumber = 0;
+                    SupportNumber3 = 0;
+                    getFilmUrl();
                 }
             });
         }
     }
+    public void getFilmUrl() {
+        if (SupportNumber2 < filmsCount[SupportNumber] - 1){
+            AVQuery<AVObject> query = new AVQuery<>("_File");
+            query.whereEqualTo("name", films[SupportNumber][SupportNumber2].getName() + ".jpg");
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject, AVException e) {
+                    Log.i("url", String.valueOf(SupportNumber) +
+                            " " + String.valueOf(SupportNumber2) +
+                            " " + avObject.getString("url"));
+                    url[SupportNumber][SupportNumber2++] = avObject.getString("url");
+                    getFilmUrl();
+                }
+            });
+        } else if (SupportNumber != themeIdList.size() - 1 && SupportNumber2 == filmsCount[SupportNumber] - 1) {
+            AVQuery<AVObject> query = new AVQuery<>("_File");
+            query.whereEqualTo("name", films[SupportNumber][SupportNumber2].getName() + ".jpg");
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject, AVException e) {
+                    Log.i("url", String.valueOf(SupportNumber) +
+                            " " + String.valueOf(SupportNumber2) +
+                            " " + avObject.getString("url"));
+                    url[SupportNumber][SupportNumber2] = avObject.getString("url");
+                    SupportNumber2 = 0;
+                    SupportNumber++;
+                    getFilmUrl();
+                }
+            });
+        } else {
+            AVQuery<AVObject> query = new AVQuery<>("_File");
+            query.whereEqualTo("name", films[SupportNumber][SupportNumber2].getName() + ".jpg");
+            query.getFirstInBackground(new GetCallback<AVObject>() {
+                @Override
+                public void done(AVObject avObject, AVException e) {
+                    Log.i("url", String.valueOf(SupportNumber) +
+                            " " + String.valueOf(SupportNumber2) +
+                            " " + avObject.getString("url"));
+                    url[SupportNumber][SupportNumber2] = avObject.getString("url");
+                    SupportNumber2 = 0;
+                    SupportNumber = 0;
+                    getFilmBitmap();
+                }
+            });
+        }
 
+    }
+
+    public void getFilmBitmap() {
+        if (SupportNumber2 < filmsCount[SupportNumber] - 1){
+            AVFile avFile = new AVFile("FilmBitmap",
+                    url[SupportNumber][SupportNumber2],
+                    new HashMap<String, Object>());
+            avFile.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] bytes, AVException e) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    Log.i("Bitmap", String.valueOf(SupportNumber) + " " + String.valueOf(SupportNumber2));
+                    films[SupportNumber][SupportNumber2++].setBitmap(bitmap);
+                    getFilmBitmap();
+                }
+            });
+        } else if (SupportNumber != themeIdList.size() - 1 && SupportNumber2 == filmsCount[SupportNumber] - 1) {
+            AVFile avFile = new AVFile("FilmBitmap",
+                    url[SupportNumber][SupportNumber2],
+                    new HashMap<String, Object>());
+            avFile.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] bytes, AVException e) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    Log.i("Bitmap", String.valueOf(SupportNumber) + " " + String.valueOf(SupportNumber2));
+                    films[SupportNumber][SupportNumber2].setBitmap(bitmap);
+                    SupportNumber2 = 0;
+                    SupportNumber++;
+                    getFilmBitmap();
+                }
+            });
+        } else {
+            AVFile avFile = new AVFile("FilmBitmap",
+                    url[SupportNumber][SupportNumber2],
+                    new HashMap<String, Object>());
+            avFile.getDataInBackground(new GetDataCallback() {
+                @Override
+                public void done(byte[] bytes, AVException e) {
+                    Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                    Log.i("Bitmap", String.valueOf(SupportNumber) + " " + String.valueOf(SupportNumber2));
+                    films[SupportNumber][SupportNumber2].setBitmap(bitmap);
+                    SupportNumber2 = 0;
+                    SupportNumber = 0;
+
+                    recyclerView = findViewById(R.id.recyclerView);
+                    LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getBaseContext());
+                    recyclerView.setLayoutManager(linearLayoutManager);
+                    final ThemeAdapter themeAdapter = new ThemeAdapter(themeList);
+                    recyclerView.setAdapter(themeAdapter);
+
+                    swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+                        @Override
+                        public void onRefresh() {
+                            themeAdapter.notifyDataSetChanged();
+                            swipeRefreshLayout.setRefreshing(false);
+                        }
+                    });
+                    animatorSet1.end();
+                    animatorSet2.end();
+                    animatorSet3.end();
+                    loadingLayout.setVisibility(View.GONE);
+                }
+            });
+        }
+
+
+    }
     public void Loading() {
         loadingLayout.setVisibility(View.VISIBLE);
 
         ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(loadingCircle1, "alpha", 1, 0);
         objectAnimator1.setStartDelay(600);
-        ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(loadingCircle2, "alpha", 1, 0);
-        objectAnimator2.setStartDelay(600);
-        ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(loadingCircle3, "alpha", 1, 0);
-        objectAnimator3.setStartDelay(600);
-        animatorSet0 = new AnimatorSet();
-        animatorSet0.play(objectAnimator1).with(objectAnimator2).with(objectAnimator3);
-        animatorSet0.start();
-        animatorSet0.addListener(new Animator.AnimatorListener() {
+        objectAnimator1.start();
+        objectAnimator1.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animator) {
 
@@ -329,7 +537,53 @@ public class Find extends AppCompatActivity implements View.OnClickListener {
             @Override
             public void onAnimationEnd(Animator animator) {
                 animatorSet1.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(loadingCircle2, "alpha", 1, 0);
+        objectAnimator2.setStartDelay(600);
+        objectAnimator2.start();
+        objectAnimator2.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
                 animatorSet2.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(loadingCircle3, "alpha", 1, 0);
+        objectAnimator3.setStartDelay(600);
+        objectAnimator3.start();
+        objectAnimator3.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
                 animatorSet3.start();
             }
 

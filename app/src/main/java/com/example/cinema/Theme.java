@@ -11,12 +11,6 @@ public class Theme {
     private String title;
     private String subhead;
 
-    public Theme(Bitmap bitmap, String title, String subhead) {
-        this.bitmap = bitmap;
-        this.title = title;
-        this.subhead = subhead;
-    }
-
     public Theme(String title, String subhead) {
         this.title = title;
         this.subhead = subhead;

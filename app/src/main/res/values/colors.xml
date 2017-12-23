@@ -8,4 +8,5 @@
     <color name="colorLineGray">#e7e7e7</color>
     <color name="colorRemind" >#ff4d64</color>
     <color name="colorBackgroundGray">#f8f8f8</color>
+    <color name="colorWhite">#ffffff</color>
 </resources>

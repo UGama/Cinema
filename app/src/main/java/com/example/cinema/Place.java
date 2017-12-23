@@ -1,16 +1,24 @@
 package com.example.cinema;
 
+import android.animation.ObjectAnimator;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +39,15 @@ public class Place extends AppCompatActivity {
 
     private RecyclerView cinemaRecyclerView;
     private List<Cinema> cinemaList;
+    private List<Cinema> cinemaList2;
+    private Cinema[] cinemas;
 
     private List<Schedule> scheduleList;
+
+    private ConstraintLayout loadingLayout;
+    private ImageView loadingCircle;
+    private ObjectAnimator loading;
+    private int SupportNumber = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,19 +74,47 @@ public class Place extends AppCompatActivity {
         DateAdapter dateAdapter = new DateAdapter(dateList);
         dateRecyclerView.setAdapter(dateAdapter);
 
-        cinemaRecyclerView = findViewById(R.id.CinemaRecyclerView);
-        LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
-        cinemaRecyclerView.setLayoutManager(linearLayoutManager1);
         cinemaList = new ArrayList<>();
-        Cinema cinema = new Cinema("杭州蓝钻时光影城", "江干区下沙听涛路157号源隆商业大厦2幢五楼", "NULL", "1.2km");
-        cinemaList.add(cinema);
-        cinemaList.add(cinema);
-        cinemaList.add(cinema);
-        cinemaList.add(cinema);
-        cinemaList.add(cinema);
-        cinemaList.add(cinema);
-        CinemaAdapter cinemaAdapter = new CinemaAdapter(cinemaList);
-        cinemaRecyclerView.setAdapter(cinemaAdapter);
+        cinemaList2 = new ArrayList<>();
+
+        loadingLayout = findViewById(R.id.loading);
+        loadingCircle = findViewById(R.id.loadingCircle);
+        loading = ObjectAnimator.ofFloat(loadingCircle, "rotation", 0, 360);
+        loading.setDuration(1200);
+        loading.setRepeatCount(-1);
+
+        initCinemaData();
+    }
+
+    public void initCinemaData() {
+        loadingLayout.setVisibility(View.VISIBLE);
+        loading.start();
+        Log.i("initCinemaData", "Start");
+        cinemaList.clear();
+        AVQuery<AVObject> query = new AVQuery<>("Cinema");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                Log.i("list", String.valueOf(list.size()));
+                for (AVObject avObject : list) {
+                    Log.i("Name", avObject.getString("Name"));
+                    Log.i("PositionDescription", avObject.getString("PositionDescription"));
+                    Cinema cinema = new Cinema(avObject.getString("Name"),
+                            avObject.getString("PositionDescription"),
+                            String.valueOf(avObject.getNumber("Distance")));
+                    cinemaList.add(cinema);
+                }
+                Log.i("Cinema", "Add Success");
+                cinemaRecyclerView = findViewById(R.id.CinemaRecyclerView);
+                LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getBaseContext());
+                cinemaRecyclerView.setLayoutManager(linearLayoutManager1);
+                sort();
+                CinemaAdapter cinemaAdapter = new CinemaAdapter(cinemaList2);
+                cinemaRecyclerView.setAdapter(cinemaAdapter);
+                loadingLayout.setVisibility(View.GONE);
+                loading.end();
+            }
+        });
     }
 
     private class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
@@ -92,6 +135,7 @@ public class Place extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     if (view != currentView) {
+                        initCinemaData();
                         currentRemind.setVisibility(View.GONE);
                         currentDate.setTextColor(getResources().getColor(R.color.colorTextGray));
                         currentRemind = view.findViewById(R.id.remind);
@@ -138,6 +182,7 @@ public class Place extends AppCompatActivity {
             }
         }
     }
+
     private class CinemaAdapter extends RecyclerView.Adapter<CinemaAdapter.ViewHolder> {
         private List<Cinema> cinemaList;
 
@@ -164,6 +209,7 @@ public class Place extends AppCompatActivity {
                     intent.putExtra("CinemaPosition", cinemaPosition);
                     intent.putExtra("Distance", distance);
                     intent.putExtra("FilmName", filmNameString);
+                    intent.putExtra("Date", currentDate.getText().toString());
                     startActivity(intent);
                     overridePendingTransition(0, 0);
                 }
@@ -175,7 +221,7 @@ public class Place extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
             Cinema cinema = cinemaList.get(position);
             holder.cinemaName.setText(cinema.getName());
-            holder.distance.setText(cinema.getDistance());
+            holder.distance.setText(cinema.getDistance() + "km");
             holder.position.setText(cinema.getPosition());
             LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getBaseContext());
             linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -214,7 +260,8 @@ public class Place extends AppCompatActivity {
         }
     }
 
-    public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
+    public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
+    {
 
         public List<Schedule> scheduleList;
 
@@ -253,5 +300,30 @@ public class Place extends AppCompatActivity {
                 type = view.findViewById(R.id.type);
             }
         }
+    }
+
+    public void sort() {
+        cinemaList2.clear();
+        Log.i("cinemaList2.size()", String.valueOf(cinemaList2.size()));
+        cinemas = new Cinema[cinemaList.size()];
+        for (int i = 0; i < cinemaList.size(); i++) {
+            cinemas[i] = cinemaList.get(i);
+        }
+        for (int i = 0; i < cinemaList.size() - 1; i++) {
+            Double min = Double.valueOf(cinemas[i].getDistance());
+            int temp = i;
+            for (int j = i + 1; j < cinemaList.size(); j++) {
+                Cinema cinema = cinemas[j];
+                if (Double.valueOf(cinema.getDistance()) < min) {
+                    temp = j;
+                    min = Double.valueOf(cinema.getDistance());
+                }
+            }
+            Cinema cinemaTemp = cinemas[i];
+            cinemas[i] = cinemas[temp];
+            cinemas[temp] = cinemaTemp;
+            cinemaList2.add(cinemas[i]);
+        }
+
     }
 }

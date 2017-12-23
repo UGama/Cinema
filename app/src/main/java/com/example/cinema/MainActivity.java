@@ -1,9 +1,16 @@
 package com.example.cinema;
 
+import android.animation.Animator;
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.support.constraint.ConstraintLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +18,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVFile;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetCallback;
+import com.avos.avoscloud.GetDataCallback;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -33,7 +49,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button mine;
     private TextView recommendText;
 
+    private ConstraintLayout loadingLayout;
+    private ImageView loadingCircle1;
+    private ImageView loadingCircle2;
+    private ImageView loadingCircle3;
+    private AnimatorSet animatorSet1;
+    private AnimatorSet animatorSet2;
+    private AnimatorSet animatorSet3;
+
+    private List<Film> filmList;
+    private List<String> urlList;
+    private List<Bitmap> bitmapList;
+
+    private int SupportNumber;
     @Override
+
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
@@ -113,6 +143,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         recommend.setBackgroundResource(R.drawable.recommend2);
         recommendText = findViewById(R.id.recommendText);
         recommendText.setTextColor(this.getResources().getColor(R.color.colorBase));
+
+        loadingLayout = findViewById(R.id.loadingLayout);
+        loadingCircle1 = findViewById(R.id.loadingCircle1);
+        loadingCircle2 = findViewById(R.id.loadingCircle2);
+        loadingCircle3 = findViewById(R.id.loadingCircle3);
+
+        filmList = new ArrayList<>();
+        urlList = new ArrayList<>();
+        bitmapList = new ArrayList<>();
+        SupportNumber = 0;
+
+        Loading();
+        initData();
 
         CloudServerOperate();
     }
@@ -231,6 +274,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return view;
         }
     }
+
     public void CloudServerOperate() {
         /*final List<AVObject> avObjectList = new ArrayList<>();
         AVObject Film1 = new AVObject("Film");// 学生 Tom
@@ -266,7 +310,262 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });*/
+       /* Cinema cinema = new Cinema("聚空间私人影院HEY JUICE茶桔便奶茶（下沙宝龙店）", "江干区下沙宝龙二期31幢103（永辉超市向北100米", 0.9);
+        Cinema cinema1 = new Cinema("YHOUSE专属影院私人影院", "江干区金沙湖1号万亚生活广场地下一层海品码头—2号（万亚美食街，天街）", 5.9);
+        Cinema cinema2 = new Cinema("来吧私人影院", "江干区下沙学源街1158号文创大厦711室（浙江传媒学院100米）", 5.4);
+        Cinema cinema3 = new Cinema("爆米花影院酒店（杭州高沙商业街店）", "江干区学林街新元金沙城1261—5号", 5.7);
+        Cinema cinema4 = new Cinema("品锐创意酒店", "江干区下沙天城东路77号创意大厦A座（东沙商业街东50米", 5.4);
+        Cinema cinema5 = new Cinema("疯潮主题日租房·暮光星辰轰趴馆", "江干区天城东路创意大厦B座（杭州东沙商业中心东侧）", 5.4);
+        Cinema cinema6 = new Cinema("疯潮主题日租房·工业心脏轰趴馆", "江干区天城东路创意大厦B座（东沙商业中心东侧）", 5.4);
+        Cinema cinema7 = new Cinema("onego别墅轰趴日租房", "江干区宋都东郡国际家湾南门对面", 1.6);
+        Cinema cinema8 = new Cinema("水草之家日租公寓", "江干区伊萨卡国际小区内", 2.4);
+        List<Cinema> cinemas = new ArrayList<>();
+        cinemas.add(cinema);
+        cinemas.add(cinema2);
+        cinemas.add(cinema3);
+        cinemas.add(cinema4);
+        cinemas.add(cinema5);
+        cinemas.add(cinema6);
+        cinemas.add(cinema7);
+        cinemas.add(cinema8);
+        cinemas.add(cinema1);
+        for (Cinema cinema0 : cinemas) {
+            AVObject avObject = new AVObject("Cinema");
+            avObject.put("Name", cinema0.getName());
+            avObject.put("PositionDescription", cinema0.getPosition());
+            avObject.put("Distance", cinema0.getDistance());
+            avObject.saveInBackground();
+        }*/
+    }
 
+    public void Loading() {
+        Log.i("Loading", "Start");
+        loadingLayout.setVisibility(View.VISIBLE);
 
+        ObjectAnimator objectAnimator1 = ObjectAnimator.ofFloat(loadingCircle1, "alpha", 1, 0);
+        objectAnimator1.setStartDelay(600);
+        objectAnimator1.start();
+        objectAnimator1.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet1.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        ObjectAnimator objectAnimator2 = ObjectAnimator.ofFloat(loadingCircle2, "alpha", 1, 0);
+        objectAnimator2.setStartDelay(600);
+        objectAnimator2.start();
+        objectAnimator2.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet2.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+        ObjectAnimator objectAnimator3 = ObjectAnimator.ofFloat(loadingCircle3, "alpha", 1, 0);
+        objectAnimator3.setStartDelay(600);
+        objectAnimator3.start();
+        objectAnimator3.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet3.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        ObjectAnimator objectAnimator11 = ObjectAnimator.ofFloat(loadingCircle1, "alpha", 0, 1);
+        objectAnimator11.setDuration(100);
+        objectAnimator11.setStartDelay(300);
+        ObjectAnimator objectAnimator12 = ObjectAnimator.ofFloat(loadingCircle1, "alpha", 1, 0);
+        objectAnimator12.setDuration(100);
+        objectAnimator12.setStartDelay(1900);
+        animatorSet1 = new AnimatorSet();
+        animatorSet1.play(objectAnimator12).after(objectAnimator11);
+        animatorSet1.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet1.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        ObjectAnimator objectAnimator21 = ObjectAnimator.ofFloat(loadingCircle2, "alpha", 0, 1);
+        objectAnimator21.setDuration(100);
+        objectAnimator21.setStartDelay(1000);
+        ObjectAnimator objectAnimator22 = ObjectAnimator.ofFloat(loadingCircle2, "alpha", 1, 0);
+        objectAnimator22.setDuration(100);
+        objectAnimator22.setStartDelay(1200);
+        animatorSet2 = new AnimatorSet();
+        animatorSet2.play(objectAnimator22).after(objectAnimator21);
+        animatorSet2.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet2.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+
+        ObjectAnimator objectAnimator31 = ObjectAnimator.ofFloat(loadingCircle3, "alpha", 0, 1);
+        objectAnimator31.setDuration(100);
+        objectAnimator31.setStartDelay(1700);
+        ObjectAnimator objectAnimator32 = ObjectAnimator.ofFloat(loadingCircle3, "alpha", 1, 0);
+        objectAnimator32.setDuration(100);
+        objectAnimator32.setStartDelay(500);
+        animatorSet3 = new AnimatorSet();
+        animatorSet3.play(objectAnimator32).after(objectAnimator31);
+        animatorSet3.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                animatorSet3.start();
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animator) {
+
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+
+            }
+        });
+    }
+
+    public void initData() {
+        Log.i("initDate", "Start");
+        AVQuery<AVObject> query = new AVQuery<>("Week");
+        query.limit(3);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                for (AVObject avObject : list) {
+                    Log.i("Film", avObject.getString("Name"));
+                    Film film = new Film(avObject.getString("Name"));
+                    filmList.add(film);
+                }
+                getUrl();
+            }
+        });
+        animatorSet1.end();
+        animatorSet2.end();
+        animatorSet3.end();
+        loadingLayout.setVisibility(View.GONE);
+    }
+
+    public void getUrl() {
+        Log.i("SupportNumber", String.valueOf(SupportNumber));
+        AVQuery<AVObject> query = new AVQuery<>("_File");
+        Log.i("Name", filmList.get(SupportNumber).getName());
+        query.whereEqualTo("name", filmList.get(SupportNumber++).getName() + ".jpg");
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                Log.i("url", avObject.getString("url"));
+                urlList.add(avObject.getString("url"));
+                if (SupportNumber == 3) {
+                    SupportNumber = 0;
+                    getBitmap();
+
+                } else {
+                    getUrl();
+                }
+            }
+        });
+    }
+
+    public void getBitmap() {
+        AVFile avFile = new AVFile("WeeklyFilmPic", urlList.get(SupportNumber++), new HashMap<String, Object>());
+        avFile.getDataInBackground(new GetDataCallback() {
+            @Override
+            public void done(byte[] bytes, AVException e) {
+                Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+                bitmapList.add(bitmap);
+                if (SupportNumber == 3) {
+                    SupportNumber = 0;
+                    setBitmap();
+                } else {
+                    getBitmap();
+                }
+            }
+        });
+    }
+
+    public void setBitmap() {
+        
     }
 }

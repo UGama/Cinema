@@ -7,15 +7,13 @@ package com.example.cinema;
 public class Cinema {
     private String Name;
     private String Position;
-    private String Pic;
     private String Distance;
     public Cinema() {
     }
 
-    public Cinema(String Name, String Position, String Pic, String Distance) {
+    public Cinema(String Name, String Position, String Distance) {
         this.Name = Name;
         this.Position = Position;
-        this.Pic = Pic;
         this.Distance = Distance;
     }
 
@@ -27,9 +25,6 @@ public class Cinema {
         return Distance;
     }
 
-    public String getPic() {
-        return Pic;
-    }
 
     public String getPosition() {
         return Position;
@@ -41,10 +36,6 @@ public class Cinema {
 
     public void setDistance(String distance) {
         Distance = distance;
-    }
-
-    public void setPic(String pic) {
-        Pic = pic;
     }
 
     public void setPosition(String position) {

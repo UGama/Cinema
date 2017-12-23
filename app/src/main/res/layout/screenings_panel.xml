@@ -5,6 +5,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#ffffff"
     >
+
     <ImageView
         android:id="@+id/cutLine"
         android:layout_width="match_parent"
@@ -26,6 +27,7 @@
         app:layout_constraintBottom_toBottomOf="@id/cutLine"
         app:layout_constraintVertical_bias="0.35"
         />
+
     <TextView
         android:id="@+id/information"
         android:textSize="12sp"
@@ -37,14 +39,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/filmName"
         />
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/dateRecyclerView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+
+    <TextView
+        android:id="@+id/date"
+        android:text="@string/test"
+        android:textSize="16sp"
+        android:textColor="@color/colorRemind"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cutLine"
         app:layout_constraintBottom_toBottomOf="parent"
-        android:background="#ffffff"
         />
+
 </android.support.constraint.ConstraintLayout>
