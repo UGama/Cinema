@@ -20,6 +20,7 @@
         app:layout_constraintTop_toBottomOf="@+id/support2"
         android:layout_marginTop="9dp"
         />
+
     <ImageView
         android:id="@+id/themePicSupport"
         android:layout_width="337dp"
@@ -65,6 +66,15 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        />
+
+    <ImageView
+        android:background="@drawable/triangel"
+        android:layout_width="20dp"
+        android:layout_height="10dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@+id/themePic"
         />
 
 </android.support.constraint.ConstraintLayout>

@@ -63,6 +63,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private List<String> supportList1;
     private List<String> supportList2;
+    private List<String> supportList3;
 
     private int SupportNumber;
     @Override
@@ -267,6 +268,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     public void CloudServerOperate() {
+        AVQuery<AVObject> query = new AVQuery<>("ScheduleMap");
+        query.whereEqualTo("StartTime", "9:30");
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                for (AVObject avObject : list) {
+                    AVObject avObject1 = AVObject.createWithoutData("ScheduleMap", avObject.getObjectId());
+                    avObject1.put("StartTime", "09:30");
+                    avObject1.saveInBackground();
+                }
+            }
+        });
         /*final List<AVObject> avObjectList = new ArrayList<>();
         AVObject Film1 = new AVObject("Film");// 学生 Tom
         Film1.put("Name", "东方快车谋杀案");
@@ -327,8 +340,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             avObject.put("Distance", cinema0.getDistance());
             avObject.saveInBackground();
         }*/
-        supportList1 = new ArrayList<>();
+        /*supportList1 = new ArrayList<>();
         supportList2 = new ArrayList<>();
+        supportList3 = new ArrayList<>();
+        supportList2.add("9:30");
+        supportList2.add("10:35");
+        supportList2.add("11:20");
+        supportList2.add("14:55");
+        supportList2.add("16:20");
+        supportList2.add("18:50");
+        supportList2.add("19:50");
+        supportList2.add("21:20");
+        supportList3.add("01-01");
+        supportList3.add("01-02");
+        supportList3.add("01-03");
+        supportList3.add("01-04");
+        supportList3.add("01-05");
+        supportList3.add("01-06");
+        supportList3.add("01-07");
         AVQuery<AVObject> avObjectAVQuery = new AVQuery<>("Cinema");
         avObjectAVQuery.findInBackground(new FindCallback<AVObject>() {
             @Override
@@ -337,10 +366,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Log.i("CinemaName", avObject.getString("Name"));
                     supportList1.add(avObject.getString("Name"));
                 }
+                for (int i = 0; i < supportList1.size(); i++) {
+                    for (int j = 0; j < filmList.size(); j++) {
+                        for (int l = 0; l < supportList2.size(); l++) {
+                            for (int m = 0; m < supportList3.size(); m++) {
+                                AVObject avObject = new AVObject("ScheduleMap");
+                                avObject.put("Cinema", supportList1.get(i));
+                                avObject.put("Film", filmList.get(j).getName());
+                                avObject.put("StartTime", supportList2.get(l));
+                                avObject.put("Date", supportList3.get(m));
+                                avObject.put("Price", "39");
+                                avObject.put("Type", "英语3D");
 
+                                avObject.saveInBackground();
+                            }
+                        }
+
+                    }
+                }
             }
         });
-
+*/
 
     }
 

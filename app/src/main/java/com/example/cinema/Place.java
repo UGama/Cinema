@@ -41,6 +41,8 @@ public class Place extends AppCompatActivity {
     private List<Cinema> cinemaList;
     private List<Cinema> cinemaList2;
     private Cinema[] cinemas;
+    private Screening[][] screenings;
+    private int[] screeningsCount;
 
     private List<Schedule> scheduleList;
 
@@ -48,6 +50,9 @@ public class Place extends AppCompatActivity {
     private ImageView loadingCircle;
     private ObjectAnimator loading;
     private int SupportNumber = 0;
+    private int SupportNumber2;
+    private int SupportNumber3;
+    private int TestNumber = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,13 +69,13 @@ public class Place extends AppCompatActivity {
         linearLayoutManager.setOrientation(LinearLayoutManager.HORIZONTAL);
         dateRecyclerView.setLayoutManager(linearLayoutManager);
         dateList = new ArrayList<>();
-        dateList.add("今天 12-01");
-        dateList.add("明天 12-02");
-        dateList.add("后天 12-03");
-        dateList.add("周四 12-04");
-        dateList.add("周五 12-05");
-        dateList.add("周六 12-06");
-        dateList.add("周日 12-07");
+        dateList.add("今天 01-01");
+        dateList.add("明天 01-02");
+        dateList.add("后天 01-03");
+        dateList.add("周四 01-04");
+        dateList.add("周五 01-05");
+        dateList.add("周六 01-06");
+        dateList.add("周日 01-07");
         DateAdapter dateAdapter = new DateAdapter(dateList);
         dateRecyclerView.setAdapter(dateAdapter);
 
@@ -83,6 +88,8 @@ public class Place extends AppCompatActivity {
         loading.setDuration(1200);
         loading.setRepeatCount(-1);
 
+        scheduleList = new ArrayList<>();
+        SupportNumber2 = 0;
         initCinemaData();
     }
 
@@ -105,16 +112,78 @@ public class Place extends AppCompatActivity {
                     cinemaList.add(cinema);
                 }
                 Log.i("Cinema", "Add Success");
-                cinemaRecyclerView = findViewById(R.id.CinemaRecyclerView);
-                LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getBaseContext());
-                cinemaRecyclerView.setLayoutManager(linearLayoutManager1);
                 sort();
-                CinemaAdapter cinemaAdapter = new CinemaAdapter(cinemaList2);
-                cinemaRecyclerView.setAdapter(cinemaAdapter);
-                loadingLayout.setVisibility(View.GONE);
-                loading.end();
+                screenings = new Screening[cinemaList.size()][10];
+                screeningsCount = new int[cinemaList.size()];
+                updateSchedule();
             }
         });
+    }
+
+    public void updateSchedule() {
+        if (SupportNumber2 != cinemaList2.size() - 1) {
+            SupportNumber3 = 0;
+            Cinema cinema = cinemaList2.get(SupportNumber2);
+            AVQuery<AVObject> query = new AVQuery<>("ScheduleMap");
+            query.whereEqualTo("Cinema", cinema.getName());
+            Log.i("Cinema", cinema.getName());
+            query.whereEqualTo("Film", filmNameString);
+            query.whereEqualTo("Date", "01-0" + String.valueOf(SupportNumber));
+            Log.i("Date", "01-0" + String.valueOf(SupportNumber));
+            query.findInBackground(new FindCallback<AVObject>() {
+                @Override
+                public void done(List<AVObject> list, AVException e) {
+                    for (AVObject avObject : list) {
+                        Log.i("Information", String.valueOf(SupportNumber2) + " "
+                                + String.valueOf(SupportNumber3) + " "
+                                + avObject.getString("StartTime") + " "
+                                + avObject.getString("Price") + " "
+                                + avObject.getString("Type"));
+                        screenings[SupportNumber2][SupportNumber3++] = new Screening(avObject.getString("StartTime"),
+                                avObject.getString("EndTime"),
+                                avObject.getString("Price"),
+                                avObject.getString("Type"));
+                    }
+                    screeningsCount[SupportNumber2] = list.size();
+                    SupportNumber2++;
+                    updateSchedule();
+                }
+            });
+        } else {
+            SupportNumber3 = 0;
+            Cinema cinema = cinemaList2.get(SupportNumber2);
+            AVQuery<AVObject> query = new AVQuery<>("ScheduleMap");
+            query.whereEqualTo("Cinema", cinema.getName());
+            Log.i("Cinema", cinema.getName());
+            query.whereEqualTo("Film", filmNameString);
+            query.whereEqualTo("Date", "01-0" + String.valueOf(SupportNumber));
+            Log.i("Date", "01-0" + String.valueOf(SupportNumber));
+            query.findInBackground(new FindCallback<AVObject>() {
+                @Override
+                public void done(List<AVObject> list, AVException e) {
+                    for (AVObject avObject : list) {
+                        Log.i("Information", String.valueOf(SupportNumber2) + " "
+                                + String.valueOf(SupportNumber3) + " "
+                                + avObject.getString("StartTime") + " "
+                                + avObject.getString("Price") + " "
+                                + avObject.getString("Type"));
+                        screenings[SupportNumber2][SupportNumber3++] = new Screening(avObject.getString("StartTime"),
+                                avObject.getString("EndTime"),
+                                avObject.getString("Price"),
+                                avObject.getString("Type"));
+                    }
+                    screeningsCount[SupportNumber2] = list.size();
+                    SupportNumber2 = 0;
+                    cinemaRecyclerView = findViewById(R.id.CinemaRecyclerView);
+                    LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(getBaseContext());
+                    cinemaRecyclerView.setLayoutManager(linearLayoutManager1);
+                    CinemaAdapter cinemaAdapter = new CinemaAdapter(cinemaList2);
+                    cinemaRecyclerView.setAdapter(cinemaAdapter);
+                    loadingLayout.setVisibility(View.GONE);
+                    loading.end();
+                }
+            });
+        }
     }
 
     private class DateAdapter extends RecyclerView.Adapter<DateAdapter.ViewHolder> {
@@ -143,6 +212,10 @@ public class Place extends AppCompatActivity {
                         currentRemind.setVisibility(View.VISIBLE);
                         currentDate.setTextColor(getResources().getColor(R.color.colorRemind));
                         currentView = view;
+                        char[] dateChar = currentDate.getText().toString().toCharArray();
+                        Log.i("Date", new String(dateChar));
+                        SupportNumber = Integer.parseInt(String.valueOf(dateChar[dateChar.length - 1]));
+                        Log.i("SupportNumber", String.valueOf(SupportNumber));
                     }
                 }
             });
@@ -159,6 +232,8 @@ public class Place extends AppCompatActivity {
                 currentView = holder.dateView;
                 currentRemind = holder.remind;
                 currentDate = holder.date;
+                SupportNumber = 1;
+                Log.i("SupportNumber", String.valueOf(SupportNumber));
             } else {
                 holder.date.setText(date);
             }
@@ -226,14 +301,20 @@ public class Place extends AppCompatActivity {
             LinearLayoutManager linearLayoutManager2 = new LinearLayoutManager(getBaseContext());
             linearLayoutManager2.setOrientation(LinearLayoutManager.HORIZONTAL);
             holder.scheduleRecyclerView.setLayoutManager(linearLayoutManager2);
-            scheduleList = new ArrayList<>();
-            scheduleList.add(new Schedule("09:30", "28元", "英语 3D"));
-            scheduleList.add(new Schedule("10:35", "28元", "英语 3D"));
-            scheduleList.add(new Schedule("11:25", "28元", "英语 3D"));
-            scheduleList.add(new Schedule("11:25", "28元", "英语 3D"));
-            scheduleList.add(new Schedule("11:25", "28元", "英语 3D"));
-            scheduleList.add(new Schedule("11:25", "28元", "英语 3D"));
-            scheduleList.add(new Schedule("11:25", "28元", "英语 3D"));
+            scheduleList.clear();
+            Log.i("TestNumber", String.valueOf(TestNumber++));
+            Log.i("ScreeningsCount", String.valueOf(screeningsCount[position]));
+            for (int i = 0; i < screeningsCount[position]; i++) {
+                scheduleList.add(new Schedule(screenings[position][i].getStartTime(),
+                        screenings[position][i].getPrice(),
+                        screenings[position][i].getType()));
+                Log.i("ScheduleList", String.valueOf(position)
+                        + " " + String.valueOf(i)
+                        + " " + screenings[position][i].getStartTime()
+                        + " " + screenings[position][i].getPrice()
+                        + " " + screenings[position][i].getType());
+            }
+            Log.i("ScheduleList", "Add Success");
             ScheduleAdapter scheduleAdapter = new ScheduleAdapter(scheduleList);
             holder.scheduleRecyclerView.setAdapter(scheduleAdapter);
         }
@@ -260,8 +341,7 @@ public class Place extends AppCompatActivity {
         }
     }
 
-    public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder>
-    {
+    public class ScheduleAdapter extends RecyclerView.Adapter<ScheduleAdapter.ViewHolder> {
 
         public List<Schedule> scheduleList;
 
@@ -280,7 +360,7 @@ public class Place extends AppCompatActivity {
         public void onBindViewHolder(ScheduleAdapter.ViewHolder holder, int position) {
             Schedule schedule = scheduleList.get(position);
             holder.time.setText(schedule.getTime());
-            holder.price.setText(schedule.getPrice());
+            holder.price.setText(schedule.getPrice() + "元");
             holder.type.setText(schedule.getType());
         }
 

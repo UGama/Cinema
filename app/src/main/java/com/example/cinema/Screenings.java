@@ -18,6 +18,12 @@ import android.widget.ImageView;
 import android.widget.ScrollView;
 import android.widget.TextView;
 
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVObject;
+import com.avos.avoscloud.AVQuery;
+import com.avos.avoscloud.FindCallback;
+import com.avos.avoscloud.GetCallback;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,6 +49,7 @@ public class Screenings extends AppCompatActivity {
     private String filmNameString;
     private TextView information;
     private TextView information2;
+    private String Time;
     private RecyclerView dateRecyclerView;
     private RecyclerView dateRecyclerView2;
     private List<String> dateList;
@@ -107,16 +114,7 @@ public class Screenings extends AppCompatActivity {
         LinearLayoutManager linearLayoutManager1 = new LinearLayoutManager(this);
         screeningsRecyclerView.setLayoutManager(linearLayoutManager1);
         screeningList = new ArrayList<>();
-        screeningList.add(new Screening("11:50", "13:50 散场", "39元", "英语 3D"));
-        screeningList.add(new Screening("11:50", "13:50 散场", "39元", "英语 3D"));
-        screeningList.add(new Screening("11:50", "13:50 散场", "39元", "英语 3D"));
-        screeningList.add(new Screening("11:50", "13:50 散场", "39元", "英语 3D"));
-        screeningList.add(new Screening("11:50", "13:50 散场", "39元", "英语 3D"));
-        screeningList.add(new Screening("11:50", "13:50 散场", "39元", "英语 3D"));
-        screeningList.add(new Screening("11:50", "13:50 散场", "39元", "英语 3D"));
-        screeningList.add(new Screening("11:50", "13:50 散场", "39元", "英语 3D"));
-        ScreeningsAdapter screeningsAdapter = new ScreeningsAdapter(screeningList);
-        screeningsRecyclerView.setAdapter(screeningsAdapter);
+
 
         midPanel = findViewById(R.id.midPanel);
         topPanel = findViewById(R.id.topPanel);
@@ -158,7 +156,108 @@ public class Screenings extends AppCompatActivity {
     }
 
     public void initData() {
+        Log.i("initData", "Start");
+        AVQuery<AVObject> query = new AVQuery<>("Film");
+        query.whereEqualTo("Name", filmNameString);
+        query.getFirstInBackground(new GetCallback<AVObject>() {
+            @Override
+            public void done(AVObject avObject, AVException e) {
+                String informationString = avObject.getString("Time")
+                        + "分钟 | " + avObject.getString("Country")
+                        + " | " + avObject.getString("Type");
+                information.setText(informationString);
+                information2.setText(informationString);
+                Time = avObject.getString("Time");
+                Log.i("Time", Time);
+                getSchedule();
+            }
+        });
+    }
 
+    public void getSchedule() {
+        supportNumber = 0;
+        char[] dateChar = date.toCharArray();
+        char[] simpleDateChar = new char[5];
+        for (int i = dateChar.length - 5; i < dateChar.length; i++) {
+            simpleDateChar[supportNumber++] = dateChar[i];
+        }
+        supportNumber = 0;
+        Log.i("simpleDate", String.valueOf(simpleDateChar));
+        AVQuery<AVObject> query = new AVQuery<>("ScheduleMap");
+        query.whereEqualTo("Cinema", cinemaNameString);
+        Log.i("Cinema", cinemaNameString);
+        query.whereEqualTo("Date", String.valueOf(simpleDateChar));
+        Log.i("Date", String.valueOf(simpleDateChar));
+        query.whereEqualTo("Film", filmNameString);
+        Log.i("Film", filmNameString);
+        query.findInBackground(new FindCallback<AVObject>() {
+            @Override
+            public void done(List<AVObject> list, AVException e) {
+                Log.i("List", String.valueOf(list.size()));
+                for (AVObject avObject : list) {
+                    Log.i("Schedule", avObject.getString("StartTime")
+                            + " " + avObject.getString("Price")
+                            + " " + avObject.getString("Type")
+                            + " " + getEndTime(avObject.getString("StartTime"), Time));
+                    Screening screening = new Screening(avObject.getString("StartTime"),
+                            getEndTime(avObject.getString("StartTime"), Time),
+                            avObject.getString("Price"),
+                            avObject.getString("Type"));
+                    screeningList.add(screening);
+                }
+                ScreeningsAdapter screeningsAdapter = new ScreeningsAdapter(screeningList);
+                screeningsRecyclerView.setAdapter(screeningsAdapter);
+                loadingLayout.setVisibility(View.GONE);
+                animatorSet1.end();
+                animatorSet2.end();
+                animatorSet3.end();
+            }
+        });
+
+    }
+
+    public String getEndTime(String startTime, String time) {
+        String endTime;
+        char[] timeChar = startTime.toCharArray();
+        char[] timeCharHour = new char[2];
+        char[] timeCharMin = new char[2];
+        int j = 0;
+        for (int i = 0; i < timeChar.length; i++) {
+            if (i >= 0 && i < 2) {
+                timeCharHour[i] = timeChar[i];
+            } else if (i > timeChar.length - 3 && i < timeChar.length) {
+                timeCharMin[j++] = timeChar[i];
+            }
+        }
+
+        int timeHour = Integer.parseInt(String.valueOf(timeCharHour));
+        int timeMin = Integer.parseInt(String.valueOf(timeCharMin));
+        Log.i("timeHour", String.valueOf(timeHour));
+        Log.i("timeMin", String.valueOf(timeMin));
+        Log.i("time", time);
+        int lastTimeMin = Integer.parseInt(time);
+        Log.i("lastTimeMin", String.valueOf(lastTimeMin));
+        int lastTimeHourAdd = lastTimeMin / 60;
+        int lastTimeMinAdd = lastTimeMin % 60;
+        int finalTimeMin = timeMin + lastTimeMinAdd;
+        int finalTimeHour = timeHour + lastTimeHourAdd;
+        Log.i("finalTimeMin", String.valueOf(finalTimeMin));
+        Log.i("finalTimeHour", String.valueOf(finalTimeHour));
+        if (finalTimeMin >= 60) {
+            finalTimeMin -= 60;
+            finalTimeHour++;
+        }
+        if (finalTimeHour < 10 && finalTimeMin < 10) {
+            endTime = "0" + String.valueOf(finalTimeHour) + ":0" + String.valueOf(finalTimeMin);
+        } else if (finalTimeHour < 10) {
+            endTime = "0" + String.valueOf(finalTimeHour) + ":" + String.valueOf(finalTimeMin);
+        } else if (finalTimeMin < 10) {
+            endTime = String.valueOf(finalTimeHour) + ":0" + String.valueOf(finalTimeMin);
+        } else {
+            endTime = String.valueOf(finalTimeHour) + ":" + String.valueOf(finalTimeMin);
+        }
+        Log.i("endTime", endTime);
+        return endTime;
     }
 
     public int getStatusBarHeight() {
@@ -195,8 +294,8 @@ public class Screenings extends AppCompatActivity {
         public void onBindViewHolder(ScreeningsAdapter.ViewHolder holder, int position) {
             Screening screening = screeningList.get(position);
             holder.startTime.setText(screening.getStartTime());
-            holder.endTime.setText(screening.getEndTime());
-            holder.price.setText(screening.getPrice());
+            holder.endTime.setText(screening.getEndTime() + " 散场");
+            holder.price.setText(screening.getPrice() + "元");
             holder.type.setText(screening.getType());
         }
 
